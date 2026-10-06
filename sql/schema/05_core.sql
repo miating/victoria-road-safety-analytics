@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS core.crash (
     accident_no              TEXT PRIMARY KEY CHECK (accident_no ~ '^T[0-9]{11}$'),
     crash_date               DATE NOT NULL,
     crash_time               TIME NOT NULL,
-    node_id                  INTEGER NOT NULL REFERENCES core.node (node_id),
+    -- NULL when the source NODE_ID is a negative placeholder (location unknown, DQ29).
+    node_id                  INTEGER REFERENCES core.node (node_id),
     accident_type_code       SMALLINT NOT NULL REFERENCES core.ref_accident_type (accident_type_code),
     dca_code                 SMALLINT NOT NULL REFERENCES core.ref_dca (dca_code),
     light_condition_code     SMALLINT NOT NULL REFERENCES core.ref_light_condition (light_condition_code),

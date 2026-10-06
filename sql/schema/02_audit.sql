@@ -33,3 +33,6 @@ CREATE TABLE IF NOT EXISTS audit.rejected_record (
     reason            TEXT NOT NULL,
     raw_record        JSONB NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS ix_rejected_record_lookup
+    ON audit.rejected_record (run_id, source_table, source_row_number);

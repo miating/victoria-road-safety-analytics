@@ -55,6 +55,9 @@ Following the project rule of never silently deleting data:
 | DQ12 | One location row per crash after de-duplication | 3,137 crashes still have 2-3 rows, differing only in `DEG_URBAN_NAME` | Fix: use the value from the lite file, which is always one of the conflicting values |
 | DQ13 | Every crash has a location | 487 crashes missing from `node.csv`; 85 have no coordinates in the lite file either | Fix: take coordinates from the lite file when node is missing. Flag the remaining 85 as unknown location |
 | DQ14 | Coordinates inside Victoria (lat -39.3 to -33.9, lon 140.9 to 150.1) and not zero | 0 outside, 0 zero. Node and lite coordinates are identical wherever both exist | Reject the coordinates (set to NULL, keep the crash) on failure |
+| DQ28 | `DISTANCE_LOCATION` is a non-negative distance | 3 rows are `-1`, all with direction `NK` (found in Phase 5 when the core CHECK constraint stopped the load) | Fix: set to NULL |
+| DQ29 | `NODE_ID` refers to a real location | 85 crashes use negative placeholders (`-1` x48, `-10` x36, `-3` x1). These are exactly the 85 crashes without coordinates in any file. Left as-is they would form a fake "hotspot" of unrelated crashes | Fix: node set to NULL, crash mapped to the Unknown location member and flagged. `ROAD_ROUTE_1 = -1` (500 rows) is also treated as unknown |
+| DQ30 | `NODE_ID` present and a whole number | 0 failures | Reject on failure |
 | DQ15 | `LGA_NAME` is a council | 149 crashes in bracketed unincorporated areas, e.g. `(MOUNT HOTHAM)` | Flag as unincorporated, keep the name |
 
 ### Referential integrity
@@ -62,6 +65,7 @@ Following the project rule of never silently deleting data:
 | ID | Check | Result | Action |
 |---|---|---|---|
 | DQ16 | Child rows reference an existing crash (orphans) | 0 in every child table | Reject on failure |
+| DQ27 | Child-table primary keys are complete and unique: (`ACCIDENT_NO`, `PERSON_ID`), (`ACCIDENT_NO`, `VEHICLE_ID`) and the condition tables | 0 failures (added in Phase 5 so the core primary keys can never fail mid-load) | Reject on failure |
 | DQ17 | Every crash has person / vehicle / atmospheric rows | About 400 crashes missing per table; 327 of them are from 2025-08 onwards, consistent with these files being an older snapshot than `accident.csv` | Flag; see DQ24 |
 | DQ18 | Every crash has sub-DCA rows | 1,276 missing, including a gap in May-July 2014 | Flag; document the 2014 gap |
 | DQ19 | Person `VEHICLE_ID` exists in `vehicle.csv` | 39 references not found | Flag, keep the person |
