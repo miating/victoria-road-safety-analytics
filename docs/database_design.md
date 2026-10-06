@@ -239,7 +239,7 @@ The combination approach works here because the number of observed combinations 
   - They are small and fast to join.
   - They isolate the warehouse from changes in source codes.
   - They let the dimensions carry special members that do not exist in the source.
-- Each dimension has an **Unknown** member with key `-1`. `dim_vehicle_type` also has a **Not applicable** member with key `-2`, used for pedestrians. Fact foreign keys are therefore never NULL, so:
+- Each dimension except `dim_date` and `dim_time` has an **Unknown** member with key `-1`. Date and time never need one, because crashes with an invalid date or time are rejected (DQ02, DQ03). `dim_vehicle_type` also has a **Not applicable** member with key `-2`, used for pedestrians. Fact foreign keys are therefore never NULL, so:
   - inner joins never silently drop rows
   - Power BI shows "Unknown" instead of "(Blank)"
   - the number of unknowns is visible and can be reported
