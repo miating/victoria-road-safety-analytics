@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Accident",
+    "file_name": "accident.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/20772c1a-8b19-424a-a733-eb84f725f611/download/accident.csv",
+    "source_last_modified": "2026-09-14T14:03:27.697477",
+    "bytes": 34445026,
+    "sha256": "33e7076c2d46eba46e3ea29fc80f70244ee6a35f4b3b36315db1fcad970fbeae",
+    "downloaded_at": "2026-10-06T08:42:14+00:00"
+  },
+  {
+    "name": "Vehicle",
+    "file_name": "vehicle.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/6d0b21f7-583a-4991-a168-f15a70c13ec4/download/vehicle.csv",
+    "source_last_modified": "2026-08-10T14:04:49.085669",
+    "bytes": 46632440,
+    "sha256": "05a7a1b9171abaeb5c188df549dee38edde6e76d5a03553988305a8280dccd12",
+    "downloaded_at": "2026-10-06T08:42:15+00:00"
+  },
+  {
+    "name": "Person",
+    "file_name": "person.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/60c8fc0c-2806-40f3-bb33-5c52691120e8/download/person.csv",
+    "source_last_modified": "2026-08-10T14:04:18.190802",
+    "bytes": 28803789,
+    "sha256": "71ca8fec01370e301f282fc83e8f11e4cde16a535ee421cbbb72512ceb7194f9",
+    "downloaded_at": "2026-10-06T08:42:16+00:00"
+  },
+  {
+    "name": "SUB DCA",
+    "file_name": "sub_dca.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/41e4df8c-920e-4b01-93d2-b3d02c4b3c27/download/sub_dca.csv",
+    "source_last_modified": "2026-08-10T14:04:27.262831",
+    "bytes": 12080092,
+    "sha256": "243640ffb19d823cd8b84008445b24d01dcc8e2d24e8dd7c4286aae7ba1345a2",
+    "downloaded_at": "2026-10-06T08:42:17+00:00"
+  },
+  {
+    "name": "Node",
+    "file_name": "node.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/466fd3b5-201b-42b5-b10d-e926324fa215/download/node.csv",
+    "source_last_modified": "2026-08-10T14:04:09.989807",
+    "bytes": 51319968,
+    "sha256": "b0bdbec22ac33df66e15cff9b531ba3203320ec5fbe20076a2820b8fec966ed4",
+    "downloaded_at": "2026-10-06T08:42:18+00:00"
+  },
+  {
+    "name": "Accident Event",
+    "file_name": "accident_event.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/a75c1a99-7d30-4b39-b96d-fec3bf62ff3f/download/accident_event.csv",
+    "source_last_modified": "2026-08-10T14:04:40.870119",
+    "bytes": 27580694,
+    "sha256": "b02e5ef853a0989261512bd1e56c2689d832461055d5b419a30522f6752ffbcb",
+    "downloaded_at": "2026-10-06T08:42:19+00:00"
+  },
+  {
+    "name": "Road Surface Condition",
+    "file_name": "road_surface_cond.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/17965f05-2dda-4351-b32c-67038c74b6b3/download/road_surface_cond.csv",
+    "source_last_modified": "2026-09-14T14:03:48.165629",
+    "bytes": 4455796,
+    "sha256": "45964ec8cd21135aee10d9d3177ccf1f31b4c7e08ac95f2c01cdb68060a2a0b5",
+    "downloaded_at": "2026-10-06T08:42:20+00:00"
+  },
+  {
+    "name": "Accident Location",
+    "file_name": "accident_location.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/e1beb92b-5836-448a-9769-e7aa6a9e7413/download/accident_location.csv",
+    "source_last_modified": "2026-09-14T14:03:41.933101",
+    "bytes": 12554034,
+    "sha256": "0588856c109ed4336ed41403a709699d6ccffc18d7a038e6935cc1becf1bb7e4",
+    "downloaded_at": "2026-10-06T08:42:21+00:00"
+  },
+  {
+    "name": "Victorian Road Crash Data",
+    "file_name": "victorian_road_crash_data.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/5df1f373-0c90-48f5-80e1-7b2a35507134/download/victorian_road_crash_data.csv",
+    "source_last_modified": "2026-09-14T14:03:33.365180",
+    "bytes": 70460535,
+    "sha256": "5d1621deef51bb92a9bd6934736d0e5201928038f8a00b9a8722238079eea39c",
+    "downloaded_at": "2026-10-06T08:42:22+00:00"
+  },
+  {
+    "name": "DCA Chart and Sub DCA Codes",
+    "file_name": "dca_chart_and_sub_dca_codes.pdf",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/b658d974-4ff1-4de2-9c12-e47bb0fdbbac/download/dca_chart_and_sub_dca_codes.pdf",
+    "source_last_modified": "2024-12-04T05:06:00.674185",
+    "bytes": 198919,
+    "sha256": "aab1f306908df3201fe621609c730cdf5aeb35c9aae9c20d345c343f57fcf5f0",
+    "downloaded_at": "2026-10-06T08:42:23+00:00"
+  },
+  {
+    "name": "Atmospheric Condition",
+    "file_name": "atmospheric_cond.csv",
+    "url": "https://opendata.transport.vic.gov.au/dataset/bb77800e-1857-4edc-bf9e-e188437a1c8e/resource/27986d89-f1fd-4f35-880a-d5be0deaa741/download/atmospheric_cond.csv",
+    "source_last_modified": "2026-08-10T14:04:34.551992",
+    "bytes": 5004152,
+    "sha256": "941957e2e9adba28cada4e8b9257d3b6a7f2434608610631858bb7425a106fdb",
+    "downloaded_at": "2026-10-06T08:42:23+00:00"
+  }
+]
