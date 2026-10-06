@@ -16,6 +16,7 @@ venv/
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
+!data/raw/manifest.json
 !data/processed/.gitkeep
 
 # Logs
