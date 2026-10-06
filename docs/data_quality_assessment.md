@@ -81,7 +81,7 @@ Following the project rule of never silently deleting data:
 
 | ID | Check | Result | Action |
 |---|---|---|---|
-| DQ24 | Recent months are complete | About 1,200-1,500 crashes per month until 2025-08, then 968, 1,058, 585, 692, 136 (2025-09 to 2026-01) | Document: load all data, but trend and year-over-year analysis uses only complete periods |
+| DQ24 | Recent months are complete | About 1,200-1,500 crashes per month until 2025-08, then 968, 1,058, 585, 692, 136 (2025-09 to 2026-01) | Document: load all data. Decision: trend and year-over-year analysis uses complete calendar years 2012-2024 (`dim_date.is_analysis_period`) |
 | DQ25 | Severity coverage | Only 4 non-injury crashes in 200,754 | Document: this is an **injury crash** dataset; never describe results as "all crashes" |
 | DQ26 | Time precision | Times cluster on :00 and :30 | Document: analyse by hour, not by minute |
 
