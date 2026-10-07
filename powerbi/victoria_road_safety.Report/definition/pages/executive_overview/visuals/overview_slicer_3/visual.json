@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "overview_slicer_3",
+  "position": {
+    "x": 644,
+    "y": 52,
+    "z": 3,
+    "height": 62,
+    "width": 302,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_severity"
+                    }
+                  },
+                  "Property": "severity_desc"
+                }
+              },
+              "queryRef": "dim_severity.severity_desc",
+              "nativeQueryRef": "severity_desc",
+              "active": true,
+              "displayName": "Severity"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

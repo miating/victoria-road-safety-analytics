@@ -1,0 +1,36 @@
+model Model
+	culture: zh-TW
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: zh-TW
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["dim_accident_type","dim_date","dim_injury_level","dim_location","dim_person_demographic","dim_light_condition","dim_road_geometry","dim_road_surface","dim_road_user_type","dim_severity","dim_speed_zone","dim_time","dim_vehicle_type","dim_weather","fact_crash","fact_person","fact_vehicle","_Measures"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_accident_type
+ref table dim_date
+ref table dim_injury_level
+ref table dim_location
+ref table dim_person_demographic
+ref table dim_light_condition
+ref table dim_road_geometry
+ref table dim_road_surface
+ref table dim_road_user_type
+ref table dim_severity
+ref table dim_speed_zone
+ref table dim_time
+ref table dim_vehicle_type
+ref table dim_weather
+ref table fact_crash
+ref table fact_person
+ref table fact_vehicle
+ref table _Measures
+
+ref cultureInfo zh-TW
+

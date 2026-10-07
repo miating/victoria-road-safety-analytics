@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "victoria_road_safety"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "010edf5c-fbdd-4818-aa81-9a8419a9faf4"
+  }
+}

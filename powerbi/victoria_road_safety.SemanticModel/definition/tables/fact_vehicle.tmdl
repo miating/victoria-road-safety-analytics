@@ -1,0 +1,94 @@
+table fact_vehicle
+	lineageTag: a1dd688b-24d3-4639-b347-d279d4ea24fa
+
+	column accident_no
+		dataType: string
+		isHidden
+		lineageTag: de706574-d6b4-410d-97cd-beac7b3a1128
+		summarizeBy: none
+		sourceColumn: accident_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_id
+		dataType: string
+		isHidden
+		lineageTag: ca7a7313-3c97-4609-9aca-5186e0633333
+		summarizeBy: none
+		sourceColumn: vehicle_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 68c7e295-a820-4612-a257-0896c8d33fb1
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f8bcf4d0-4a39-4ad4-be0c-0a55643ac7b5
+		summarizeBy: none
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: db681888-8b50-4cee-b33e-14d133ade8b9
+		summarizeBy: none
+		sourceColumn: severity_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 612608ff-b677-45a4-99bd-2cb4f8863d5e
+		summarizeBy: none
+		sourceColumn: vehicle_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column occupants
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4cdc7580-bad0-4188-b400-f9d175cae88b
+		summarizeBy: sum
+		sourceColumn: occupants
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_age_years
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0a35800d-f8c8-4d24-b710-0c5b010386f9
+		summarizeBy: sum
+		sourceColumn: vehicle_age_years
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_vehicle = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_fact_vehicle = 來源{[Schema="analytics",Item="fact_vehicle"]}[Data]
+				in
+				    analytics_fact_vehicle
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

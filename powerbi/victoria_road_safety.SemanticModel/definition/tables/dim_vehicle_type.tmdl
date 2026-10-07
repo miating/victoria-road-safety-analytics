@@ -1,0 +1,50 @@
+table dim_vehicle_type
+	lineageTag: 3b26c53e-6451-41dd-8477-4a9c33b103a5
+
+	column vehicle_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1a580809-3065-4f02-b501-cf3d9a10ffcc
+		summarizeBy: none
+		sourceColumn: vehicle_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_type_code
+		dataType: string
+		lineageTag: dc6c46b2-7220-49b4-a991-8edf2f8a02af
+		summarizeBy: none
+		sourceColumn: vehicle_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_type_desc
+		dataType: string
+		lineageTag: 57978307-76ae-4032-a56e-ec6f3cb3e568
+		summarizeBy: none
+		sourceColumn: vehicle_type_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_category
+		dataType: string
+		lineageTag: a9d7d799-ce57-4faa-b0c6-94a80435ccc0
+		summarizeBy: none
+		sourceColumn: vehicle_category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_vehicle_type = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_vehicle_type = 來源{[Schema="analytics",Item="dim_vehicle_type"]}[Data]
+				in
+				    analytics_dim_vehicle_type
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

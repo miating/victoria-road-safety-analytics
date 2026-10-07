@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "risk_footer",
+  "position": {
+    "x": 20,
+    "y": 690,
+    "z": 99,
+    "height": 26,
+    "width": 1240,
+    "tabOrder": 99
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Injury crashes only. Complete years 2012-2024. Counts are not adjusted for traffic volume; associations do not imply causation. KSI = killed or seriously injured. Source: DTP Victoria road crash data (CC BY 4.0).",
+                    "textStyle": {
+                      "fontSize": "8pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

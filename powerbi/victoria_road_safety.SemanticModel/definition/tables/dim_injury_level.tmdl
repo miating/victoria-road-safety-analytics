@@ -1,0 +1,54 @@
+table dim_injury_level
+	lineageTag: 6f771594-70d4-455c-8c98-c6d7ad54c8d5
+
+	column injury_level_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e8c9ec2a-d59d-4a83-b25c-84f94b093a2c
+		summarizeBy: none
+		sourceColumn: injury_level_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column injury_level_code
+		dataType: int64
+		formatString: 0
+		lineageTag: bdb41e93-a776-4fb8-b4ea-705dbde4532f
+		summarizeBy: none
+		sourceColumn: injury_level_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column injury_level_desc
+		dataType: string
+		lineageTag: 6d05ad86-2db2-4f69-b80c-cb4d10c508b9
+		summarizeBy: none
+		sourceColumn: injury_level_desc
+		sortByColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column sort_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4f2e5a3b-89e8-4328-953b-17166f9338ac
+		summarizeBy: none
+		sourceColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_injury_level = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_injury_level = 來源{[Schema="analytics",Item="dim_injury_level"]}[Data]
+				in
+				    analytics_dim_injury_level
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

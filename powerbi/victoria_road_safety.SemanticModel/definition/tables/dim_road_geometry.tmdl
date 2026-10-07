@@ -1,0 +1,52 @@
+table dim_road_geometry
+	lineageTag: 8501e113-22a0-426c-9435-7b6b9e315020
+
+	column road_geometry_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 73a49bbd-8d26-45ab-a8a0-e88bdc6363e6
+		summarizeBy: none
+		sourceColumn: road_geometry_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_geometry_code
+		dataType: int64
+		formatString: 0
+		lineageTag: 1666f596-af02-4878-aa30-895649316cf1
+		summarizeBy: none
+		sourceColumn: road_geometry_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_geometry_desc
+		dataType: string
+		lineageTag: 3b3b069a-68c6-4d2d-b619-e094a414d9f9
+		summarizeBy: none
+		sourceColumn: road_geometry_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_intersection
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 27baecdc-c7de-41a8-9ebc-2dd7d086a782
+		summarizeBy: none
+		sourceColumn: is_intersection
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_road_geometry = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_road_geometry = 來源{[Schema="analytics",Item="dim_road_geometry"]}[Data]
+				in
+				    analytics_dim_road_geometry
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

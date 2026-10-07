@@ -1,0 +1,185 @@
+table fact_crash
+	lineageTag: e54c0848-c7d8-4325-ad4d-7efdc9588ab4
+
+	column accident_no
+		dataType: string
+		isHidden
+		lineageTag: 0fe7193e-674f-4a07-b52c-0f3d8e2c299b
+		summarizeBy: none
+		sourceColumn: accident_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8a8dc073-28e8-4a7c-8766-1cff67ae7614
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 40aa6729-38d4-4eae-941e-e5a014e78e91
+		summarizeBy: none
+		sourceColumn: hour_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f7283fc1-f48a-454e-b0e1-b2bb15260821
+		summarizeBy: none
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: eda3db7b-9730-4c8d-a46c-31fd1be35dee
+		summarizeBy: none
+		sourceColumn: severity_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column accident_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9d18d172-df04-4c97-b5c0-ea9a7394ef49
+		summarizeBy: none
+		sourceColumn: accident_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column light_condition_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 04c60cad-1792-4394-9943-55ea06ae6072
+		summarizeBy: none
+		sourceColumn: light_condition_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_geometry_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0b057af2-3b20-48b9-8a01-867e268eefda
+		summarizeBy: none
+		sourceColumn: road_geometry_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column speed_zone_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8c27aae5-bd88-4651-9d20-4b36e6d6e866
+		summarizeBy: none
+		sourceColumn: speed_zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column weather_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 727c42ee-ae8f-4a6d-ab69-71d75c6e16e3
+		summarizeBy: none
+		sourceColumn: weather_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_surface_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3ba8cda4-2d40-4475-89ee-d73e91af6a84
+		summarizeBy: none
+		sourceColumn: road_surface_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column persons_killed
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 79e23598-fa83-404f-8061-2eace1261aac
+		summarizeBy: sum
+		sourceColumn: persons_killed
+
+		annotation SummarizationSetBy = Automatic
+
+	column persons_seriously_injured
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4c3ab79e-15fd-4afd-a843-107ccf57c134
+		summarizeBy: sum
+		sourceColumn: persons_seriously_injured
+
+		annotation SummarizationSetBy = Automatic
+
+	column persons_other_injury
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cc7b538b-db9b-4c0c-a62c-93218b1cef75
+		summarizeBy: sum
+		sourceColumn: persons_other_injury
+
+		annotation SummarizationSetBy = Automatic
+
+	column persons_not_injured
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 05634e30-d89e-447e-86c5-e4871f40260c
+		summarizeBy: sum
+		sourceColumn: persons_not_injured
+
+		annotation SummarizationSetBy = Automatic
+
+	column persons_involved
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8a48827f-cddf-48cf-ac81-426a8b069d30
+		summarizeBy: sum
+		sourceColumn: persons_involved
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicles_involved
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: edcc3824-9eba-4120-822a-35df7b98a9f1
+		summarizeBy: sum
+		sourceColumn: vehicles_involved
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_crash = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_fact_crash = 來源{[Schema="analytics",Item="fact_crash"]}[Data]
+				in
+				    analytics_fact_crash
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

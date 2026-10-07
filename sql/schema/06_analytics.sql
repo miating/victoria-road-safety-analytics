@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS analytics.dim_date (
     day_of_week_number SMALLINT NOT NULL,            -- ISO: 1 = Monday ... 7 = Sunday
     day_name           TEXT NOT NULL,
     is_weekend         BOOLEAN NOT NULL,
+    day_type           TEXT NOT NULL,                -- 'Weekday' / 'Weekend', for report legends
     season             TEXT NOT NULL,                -- southern hemisphere
     is_analysis_period BOOLEAN NOT NULL              -- 2012-2024 complete years (DQ24)
 );

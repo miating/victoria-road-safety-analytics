@@ -1,0 +1,150 @@
+table dim_date
+	lineageTag: 92ff94d7-a6f0-437b-880d-44a910e72c9c
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 607aefec-7222-4781-978a-f893cef3d7bd
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 0f99f18f-75a4-417b-bff6-9f040ee298a6
+		summarizeBy: none
+		sourceColumn: full_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 21e84e9a-41a1-4567-9159-879ecf69679f
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 75e2b8e0-18b9-4909-b390-e9b7862faadc
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8126117b-375b-4401-bc05-ae48c37a966c
+		summarizeBy: none
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: ae34d5b5-6e9b-4d8f-acd7-4df664f2e1f6
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		lineageTag: ef2a73a3-8eea-4883-8ad1-58379e97af25
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: b15d3cac-7edf-406b-ace9-8a306ef2f8fc
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week_number
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: af6b946f-567a-4eff-bac9-0ff16042c2ff
+		summarizeBy: none
+		sourceColumn: day_of_week_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: 1feb3682-f1f8-422a-bdd2-93c19b83052b
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5fbbbab8-bda1-4d0e-bc0a-c05a629490f6
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column season
+		dataType: string
+		lineageTag: cab1f2ee-95dc-4551-ad4a-dae7e9a06657
+		summarizeBy: none
+		sourceColumn: season
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_analysis_period
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 15fb4638-a2f5-483e-9a8c-2777ac7925ad
+		summarizeBy: none
+		sourceColumn: is_analysis_period
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_type
+		dataType: string
+		lineageTag: 0b415876-511f-417b-9d32-6d87e2370110
+		summarizeBy: none
+		sourceColumn: day_type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_date = 來源{[Schema="analytics",Item="dim_date"]}[Data]
+				in
+				    analytics_dim_date
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

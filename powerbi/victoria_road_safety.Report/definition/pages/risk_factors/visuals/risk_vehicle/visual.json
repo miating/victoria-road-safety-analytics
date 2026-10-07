@@ -1,0 +1,129 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "risk_vehicle",
+  "position": {
+    "x": 20,
+    "y": 406,
+    "z": 13,
+    "height": 276,
+    "width": 405,
+    "tabOrder": 13
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_vehicle_type"
+                    }
+                  },
+                  "Property": "vehicle_category"
+                }
+              },
+              "queryRef": "dim_vehicle_type.vehicle_category",
+              "nativeQueryRef": "vehicle_category",
+              "active": true,
+              "displayName": "Vehicle"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Vehicles Involved"
+                }
+              },
+              "queryRef": "_Measures.Vehicles Involved",
+              "nativeQueryRef": "Vehicles Involved",
+              "displayName": "Vehicles involved"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Vehicles in KSI Crash %"
+                }
+              },
+              "queryRef": "_Measures.Vehicles in KSI Crash %",
+              "nativeQueryRef": "Vehicles in KSI Crash %",
+              "displayName": "In a KSI crash"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Vehicles in KSI Crash %"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Vehicles: share involved in a KSI crash'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

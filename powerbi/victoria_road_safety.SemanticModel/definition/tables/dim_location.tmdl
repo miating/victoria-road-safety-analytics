@@ -1,0 +1,139 @@
+table dim_location
+	lineageTag: 7e0264d4-374f-4678-8196-56d540ea3e16
+
+	column location_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 11610eb2-821a-46fd-99f8-3373ba13b91b
+		summarizeBy: none
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column node_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2895b8ab-8b4c-4f47-9685-95fbdbb413bd
+		summarizeBy: none
+		sourceColumn: node_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column node_type_code
+		dataType: string
+		lineageTag: e0cb4410-95f4-4974-8309-5828a6128b70
+		summarizeBy: none
+		sourceColumn: node_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column node_type_desc
+		dataType: string
+		lineageTag: 515e31f5-eb1d-496c-a92e-b3a96ddcb592
+		summarizeBy: none
+		sourceColumn: node_type_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 738f85e6-c39b-485d-a0d7-92e33b4dad60
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: 5c2f8341-b1e0-47f9-9010-391e2463d181
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lga_name
+		dataType: string
+		lineageTag: cc5cb15d-5fbd-4ac0-9eec-4ebfd5e2b7bb
+		summarizeBy: none
+		sourceColumn: lga_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column dtp_region
+		dataType: string
+		lineageTag: 87d55a4f-c532-461d-9c48-5cad175c76a9
+		summarizeBy: none
+		sourceColumn: dtp_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column postcode
+		dataType: string
+		lineageTag: 299dc2ab-1998-4c1a-98b9-3e6943d55d9e
+		summarizeBy: none
+		sourceColumn: postcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_name
+		dataType: string
+		lineageTag: 4c604b44-678c-4450-9224-5b05872785fb
+		summarizeBy: none
+		sourceColumn: road_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column intersecting_road_name
+		dataType: string
+		lineageTag: f4746a39-7c6f-4984-ae19-36d55cb124fa
+		summarizeBy: none
+		sourceColumn: intersecting_road_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_label
+		dataType: string
+		lineageTag: 929354b5-2c95-458f-ada3-9887541977ed
+		summarizeBy: none
+		sourceColumn: location_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_unincorporated
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b7765d6d-7cca-4fbe-ac57-0346c5054600
+		summarizeBy: none
+		sourceColumn: is_unincorporated
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_coordinates
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b4908f67-ebc0-49dc-902f-e049c19e0baf
+		summarizeBy: none
+		sourceColumn: has_coordinates
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_location = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_location = 來源{[Schema="analytics",Item="dim_location"]}[Data]
+				in
+				    analytics_dim_location
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

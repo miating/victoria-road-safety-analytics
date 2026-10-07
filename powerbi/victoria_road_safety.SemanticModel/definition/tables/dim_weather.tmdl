@@ -1,0 +1,123 @@
+table dim_weather
+	lineageTag: 4aa1e807-2b08-4a43-8c0c-09ee1acb69a8
+
+	column weather_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9d84a2ae-a96a-40ef-ab70-91f40167a062
+		summarizeBy: none
+		sourceColumn: weather_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column weather_desc
+		dataType: string
+		lineageTag: 09f834c0-b8db-480e-b557-54049367359c
+		summarizeBy: none
+		sourceColumn: weather_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column condition_count
+		dataType: int64
+		formatString: 0
+		lineageTag: e6e388bc-2348-416d-a024-78d04bc689be
+		summarizeBy: none
+		sourceColumn: condition_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_clear
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bcac57a9-2504-4ca9-b848-591ad2199e7d
+		summarizeBy: none
+		sourceColumn: has_clear
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_rain
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4e2a1157-ad73-4b30-bd28-b99b6ef8f0a7
+		summarizeBy: none
+		sourceColumn: has_rain
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_snow
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7bad91e9-35e5-420c-8cb7-206c2a9ca9d7
+		summarizeBy: none
+		sourceColumn: has_snow
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_fog
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 543f820c-3b71-4e9e-ba90-837f961382ad
+		summarizeBy: none
+		sourceColumn: has_fog
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_smoke
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 644b0ccc-b727-4df5-8af3-602dda9537ae
+		summarizeBy: none
+		sourceColumn: has_smoke
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_dust
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 093ab7c5-1477-4f06-8c0c-38ea49800f86
+		summarizeBy: none
+		sourceColumn: has_dust
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_strong_winds
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a4bcf43e-1772-4314-9c31-861ea138b29c
+		summarizeBy: none
+		sourceColumn: has_strong_winds
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_not_known
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 13d39459-740f-4985-93a8-9b1e2ca6c8e4
+		summarizeBy: none
+		sourceColumn: is_not_known
+
+		annotation SummarizationSetBy = Automatic
+
+	column weather_category
+		dataType: string
+		lineageTag: fa03d1f2-7270-4289-9eeb-6a53722ab49f
+		summarizeBy: none
+		sourceColumn: weather_category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_weather = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_weather = 來源{[Schema="analytics",Item="dim_weather"]}[Data]
+				in
+				    analytics_dim_weather
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,70 @@
+table dim_speed_zone
+	lineageTag: 4d49f614-619e-4bc7-b2b9-d0044b5a2a1c
+
+	column speed_zone_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7c587cbd-3792-4351-b36c-a11173f95725
+		summarizeBy: none
+		sourceColumn: speed_zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column speed_zone_code
+		dataType: string
+		lineageTag: 0096bf3c-b5f5-4c11-8978-4b317b761ed8
+		summarizeBy: none
+		sourceColumn: speed_zone_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column speed_zone_desc
+		dataType: string
+		lineageTag: eb6f7fbf-2da8-4848-87c7-c830d8a074e8
+		summarizeBy: none
+		sourceColumn: speed_zone_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column speed_limit_kmh
+		dataType: int64
+		formatString: 0
+		lineageTag: 68484424-7c56-408f-bdc8-e2997e4e2291
+		summarizeBy: none
+		sourceColumn: speed_limit_kmh
+
+		annotation SummarizationSetBy = Automatic
+
+	column speed_band
+		dataType: string
+		lineageTag: bb27bf7b-29a5-4bfb-8c2b-727631a9985c
+		summarizeBy: none
+		sourceColumn: speed_band
+		sortByColumn: speed_band_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column speed_band_sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c098f13c-5cda-4960-94ed-034be59e25c1
+		summarizeBy: none
+		sourceColumn: speed_band_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_speed_zone = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_speed_zone = 來源{[Schema="analytics",Item="dim_speed_zone"]}[Data]
+				in
+				    analytics_dim_speed_zone
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

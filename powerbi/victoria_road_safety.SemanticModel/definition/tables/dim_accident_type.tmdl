@@ -1,0 +1,43 @@
+table dim_accident_type
+	lineageTag: 6e354937-8460-42b5-b594-d3d142da1925
+
+	column accident_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c7e326c1-fddb-4e65-8692-590043670681
+		summarizeBy: none
+		sourceColumn: accident_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column accident_type_code
+		dataType: int64
+		formatString: 0
+		lineageTag: 2e0301e3-b308-4578-8ba0-60d05699fa16
+		summarizeBy: none
+		sourceColumn: accident_type_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column accident_type_desc
+		dataType: string
+		lineageTag: a9999cad-bd57-4398-ba02-98ef0546e14e
+		summarizeBy: none
+		sourceColumn: accident_type_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_accident_type = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_accident_type = 來源{[Schema="analytics",Item="dim_accident_type"]}[Data]
+				in
+				    analytics_dim_accident_type
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

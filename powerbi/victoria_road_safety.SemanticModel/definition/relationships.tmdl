@@ -1,0 +1,126 @@
+relationship fdbefecd-def2-4f3b-a824-cfd4703378db
+	fromColumn: fact_crash.accident_type_key
+	toColumn: dim_accident_type.accident_type_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship f315ccf7-a369-4a18-b3a4-e65ffeb31cf6
+	fromColumn: fact_crash.date_key
+	toColumn: dim_date.date_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship af5dc7eb-a6d9-470b-8344-aeddbaf2789d
+	fromColumn: fact_crash.location_key
+	toColumn: dim_location.location_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 4e37e10b-62c2-49a9-ae4f-735afe0766b8
+	fromColumn: fact_crash.light_condition_key
+	toColumn: dim_light_condition.light_condition_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 8a4ad9be-ad0b-41e9-9787-4cd06db6bee6
+	fromColumn: fact_crash.road_geometry_key
+	toColumn: dim_road_geometry.road_geometry_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 1ce9edc9-4bca-4c74-9e21-c334aa53dcbc
+	fromColumn: fact_crash.road_surface_key
+	toColumn: dim_road_surface.road_surface_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship a2a440ad-504d-4fb7-bbf8-25d311f171fe
+	fromColumn: fact_crash.severity_key
+	toColumn: dim_severity.severity_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 0c79c67e-c8a2-41d9-b7ee-92ad5c95483b
+	fromColumn: fact_crash.speed_zone_key
+	toColumn: dim_speed_zone.speed_zone_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 4ac48d6f-f2ff-43e5-9715-638fcb10630f
+	fromColumn: fact_crash.hour_key
+	toColumn: dim_time.hour_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 3bd5661d-0503-4f41-a39e-365aeae07d69
+	fromColumn: fact_crash.weather_key
+	toColumn: dim_weather.weather_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 259cd3de-e3cf-444d-ac95-a2c5d2b293bb
+	fromColumn: fact_person.date_key
+	toColumn: dim_date.date_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 7040bb2b-012e-4037-83f5-78530f1ee900
+	fromColumn: fact_person.injury_level_key
+	toColumn: dim_injury_level.injury_level_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 3611092d-0574-4760-9a80-4430214751e8
+	fromColumn: fact_person.location_key
+	toColumn: dim_location.location_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 7cd9bfe3-f4b1-42e4-930c-8b67307903b9
+	fromColumn: fact_person.person_demographic_key
+	toColumn: dim_person_demographic.person_demographic_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 144c7de7-1190-484f-af04-50f3dff66216
+	fromColumn: fact_person.road_user_type_key
+	toColumn: dim_road_user_type.road_user_type_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship faf20743-b394-42c1-afa9-7f7e575776b6
+	fromColumn: fact_person.severity_key
+	toColumn: dim_severity.severity_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 96d20623-62a7-49c9-8a40-a32eff9f02d8
+	fromColumn: fact_person.vehicle_type_key
+	toColumn: dim_vehicle_type.vehicle_type_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 76a7f903-fd90-4c88-bbfe-95c2b2c5284e
+	fromColumn: fact_vehicle.date_key
+	toColumn: dim_date.date_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 0291ff0c-7cb8-400f-8c98-68b079675ed2
+	fromColumn: fact_vehicle.location_key
+	toColumn: dim_location.location_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 4ddf4057-ef73-46e8-9b5f-8e48d30ea346
+	fromColumn: fact_vehicle.severity_key
+	toColumn: dim_severity.severity_key
+
+	annotation PBI_IsFromSource = FS
+
+relationship 3ff36988-9353-471b-bc93-aec3e67ab129
+	fromColumn: fact_vehicle.vehicle_type_key
+	toColumn: dim_vehicle_type.vehicle_type_key
+
+	annotation PBI_IsFromSource = FS
+

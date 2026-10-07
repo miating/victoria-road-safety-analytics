@@ -1,0 +1,72 @@
+table dim_severity
+	lineageTag: f80e6828-2f2f-4b94-abb0-1822168a26a1
+
+	column severity_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fc0de215-9d1c-45af-9a53-d61515d8ebca
+		summarizeBy: none
+		sourceColumn: severity_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity_code
+		dataType: int64
+		formatString: 0
+		lineageTag: 987e5332-df92-4e22-a845-34748a5808b2
+		summarizeBy: none
+		sourceColumn: severity_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity_desc
+		dataType: string
+		lineageTag: e9c59f73-5b6b-4703-a001-aa8b50f54f50
+		summarizeBy: none
+		sourceColumn: severity_desc
+		sortByColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_fatal
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a4ded837-ef52-4e13-9e57-5915065aeb81
+		summarizeBy: none
+		sourceColumn: is_fatal
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_fatal_or_serious
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fd3896b0-4dfb-4429-8604-2f923b00dd7b
+		summarizeBy: none
+		sourceColumn: is_fatal_or_serious
+
+		annotation SummarizationSetBy = Automatic
+
+	column sort_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 427246d4-7b32-4097-8c16-6f6909d0a6c1
+		summarizeBy: none
+		sourceColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_severity = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_severity = 來源{[Schema="analytics",Item="dim_severity"]}[Data]
+				in
+				    analytics_dim_severity
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

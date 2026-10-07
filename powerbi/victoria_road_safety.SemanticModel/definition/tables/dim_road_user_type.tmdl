@@ -1,0 +1,45 @@
+table dim_road_user_type
+	lineageTag: b0bef489-ac8b-4d39-829d-5d3a280bb4c6
+
+	column road_user_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f687d152-b3d9-4077-848c-ca6dc7d24c8e
+		summarizeBy: none
+		sourceColumn: road_user_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_user_type_desc
+		dataType: string
+		lineageTag: d4d9fde9-fd7e-4ba9-af78-f4bb53b5b8c7
+		summarizeBy: none
+		sourceColumn: road_user_type_desc
+		sortByColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column sort_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3a77164a-ac38-4a14-b29f-0e25ebecf713
+		summarizeBy: none
+		sourceColumn: sort_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_road_user_type = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_road_user_type = 來源{[Schema="analytics",Item="dim_road_user_type"]}[Data]
+				in
+				    analytics_dim_road_user_type
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

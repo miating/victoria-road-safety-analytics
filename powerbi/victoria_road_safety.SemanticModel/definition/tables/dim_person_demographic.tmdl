@@ -1,0 +1,61 @@
+table dim_person_demographic
+	lineageTag: 1784fac1-1a44-4243-bebe-174ed35bf612
+
+	column person_demographic_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dadaa522-3890-4a38-9f52-5350b35c7452
+		summarizeBy: none
+		sourceColumn: person_demographic_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_group
+		dataType: string
+		lineageTag: f990767a-b07a-492b-8bae-d42c27c22d84
+		summarizeBy: none
+		sourceColumn: age_group
+		sortByColumn: age_group_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_group_sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8c794db3-e3ca-4d4e-9298-1995ca6368a0
+		summarizeBy: none
+		sourceColumn: age_group_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column sex_code
+		dataType: string
+		lineageTag: 897b50c8-2ce2-4feb-b28c-d9d6c8e5e0f0
+		summarizeBy: none
+		sourceColumn: sex_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column sex_desc
+		dataType: string
+		lineageTag: 8d80e42c-9f93-4006-bb8a-674461dadf4a
+		summarizeBy: none
+		sourceColumn: sex_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_person_demographic = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_person_demographic = 來源{[Schema="analytics",Item="dim_person_demographic"]}[Data]
+				in
+				    analytics_dim_person_demographic
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "risk_light",
+  "position": {
+    "x": 850,
+    "y": 122,
+    "z": 12,
+    "height": 276,
+    "width": 405,
+    "tabOrder": 12
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_light_condition"
+                    }
+                  },
+                  "Property": "light_condition_desc"
+                }
+              },
+              "queryRef": "dim_light_condition.light_condition_desc",
+              "nativeQueryRef": "light_condition_desc",
+              "active": true,
+              "displayName": "Light"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Crashes"
+                }
+              },
+              "queryRef": "_Measures.Total Crashes",
+              "nativeQueryRef": "Total Crashes",
+              "displayName": "Crashes"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "KSI Share"
+                }
+              },
+              "queryRef": "_Measures.KSI Share",
+              "nativeQueryRef": "KSI Share",
+              "displayName": "KSI share"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Fatal Share"
+                }
+              },
+              "queryRef": "_Measures.Fatal Share",
+              "nativeQueryRef": "Fatal Share",
+              "displayName": "Fatal share"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "KSI Share"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Light condition'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

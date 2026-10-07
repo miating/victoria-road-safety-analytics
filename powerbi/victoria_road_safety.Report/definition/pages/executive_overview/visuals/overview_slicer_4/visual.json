@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "overview_slicer_4",
+  "position": {
+    "x": 956,
+    "y": 52,
+    "z": 4,
+    "height": 62,
+    "width": 302,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_vehicle_type"
+                    }
+                  },
+                  "Property": "vehicle_category"
+                }
+              },
+              "queryRef": "dim_vehicle_type.vehicle_category",
+              "nativeQueryRef": "vehicle_category",
+              "active": true,
+              "displayName": "Vehicle type"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

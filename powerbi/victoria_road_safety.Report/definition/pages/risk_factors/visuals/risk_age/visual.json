@@ -1,0 +1,129 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "risk_age",
+  "position": {
+    "x": 850,
+    "y": 406,
+    "z": 15,
+    "height": 276,
+    "width": 405,
+    "tabOrder": 15
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_person_demographic"
+                    }
+                  },
+                  "Property": "age_group"
+                }
+              },
+              "queryRef": "dim_person_demographic.age_group",
+              "nativeQueryRef": "age_group",
+              "active": true,
+              "displayName": "Age group"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "People Involved"
+                }
+              },
+              "queryRef": "_Measures.People Involved",
+              "nativeQueryRef": "People Involved",
+              "displayName": "People involved"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "People KSI %"
+                }
+              },
+              "queryRef": "_Measures.People KSI %",
+              "nativeQueryRef": "People KSI %",
+              "displayName": "Killed or seriously injured"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_person_demographic"
+                  }
+                },
+                "Property": "age_group"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Age: share killed or seriously injured'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

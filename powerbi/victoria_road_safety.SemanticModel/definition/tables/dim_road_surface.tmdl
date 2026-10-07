@@ -1,0 +1,105 @@
+table dim_road_surface
+	lineageTag: c1ce4052-2b7b-46bd-934f-4a945765e2ca
+
+	column road_surface_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bc412522-4964-4786-a510-888169d74fb5
+		summarizeBy: none
+		sourceColumn: road_surface_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column surface_desc
+		dataType: string
+		lineageTag: 22690633-ed21-473a-a0cb-1dea1f19ef7a
+		summarizeBy: none
+		sourceColumn: surface_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column condition_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 37696bc2-52a1-4df4-84fc-8e8182c2612c
+		summarizeBy: none
+		sourceColumn: condition_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_dry
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f325070e-bc6d-412e-95fc-7e285f304d77
+		summarizeBy: none
+		sourceColumn: has_dry
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_wet
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 471176cf-643f-4b93-87e8-4cc9bcb2b0ef
+		summarizeBy: none
+		sourceColumn: has_wet
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_muddy
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: bdaa5fd9-fc60-446a-963f-83ce11e2237d
+		summarizeBy: none
+		sourceColumn: has_muddy
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_icy
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6a5dfb55-7ea4-4554-9bd5-9d748ad888ed
+		summarizeBy: none
+		sourceColumn: has_icy
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_snowy
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d1dbb1c4-940d-49c1-85e0-d6d1d47b06d3
+		summarizeBy: none
+		sourceColumn: has_snowy
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_not_known
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e8a019fb-e17f-478c-b410-f41fa5413140
+		summarizeBy: none
+		sourceColumn: is_not_known
+
+		annotation SummarizationSetBy = Automatic
+
+	column surface_category
+		dataType: string
+		lineageTag: 42aedebb-5a21-4cbf-85eb-d0d52320589e
+		summarizeBy: none
+		sourceColumn: surface_category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_road_surface = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_road_surface = 來源{[Schema="analytics",Item="dim_road_surface"]}[Data]
+				in
+				    analytics_dim_road_surface
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

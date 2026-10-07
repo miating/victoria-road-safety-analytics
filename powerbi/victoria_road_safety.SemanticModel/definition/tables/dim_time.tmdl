@@ -1,0 +1,53 @@
+table dim_time
+	lineageTag: 4de23dff-3610-4020-8e99-d3e2d950fc7f
+
+	column hour_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4f705d10-c37a-4ce1-85f4-caa5bea9c58d
+		summarizeBy: none
+		sourceColumn: hour_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_label
+		dataType: string
+		lineageTag: ca4d6141-5176-4078-bc8e-237d14aff034
+		summarizeBy: none
+		sourceColumn: hour_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_band
+		dataType: string
+		lineageTag: f1e7e7e7-00be-4858-b3c3-75beb66dcc16
+		summarizeBy: none
+		sourceColumn: time_band
+		sortByColumn: time_band_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_band_sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9e8cae47-168d-4856-84df-8a5e7f794bb6
+		summarizeBy: none
+		sourceColumn: time_band_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_time = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_time = 來源{[Schema="analytics",Item="dim_time"]}[Data]
+				in
+				    analytics_dim_time
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

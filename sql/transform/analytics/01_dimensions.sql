@@ -10,7 +10,10 @@ TRUNCATE analytics.fact_crash, analytics.fact_person, analytics.fact_vehicle,
 RESTART IDENTITY;
 
 -- Date: every day from 2012-01-01 to the end of the latest crash year, so there are no gaps.
+-- Explicit column list: a positional INSERT breaks silently when a column is added to the table.
 INSERT INTO analytics.dim_date
+    (date_key, full_date, year, quarter, month_number, month_name, year_month, day_of_month,
+     day_of_week_number, day_name, is_weekend, day_type, season, is_analysis_period)
 SELECT to_char(d, 'YYYYMMDD')::INTEGER,
        d,
        extract(year FROM d),
@@ -22,6 +25,7 @@ SELECT to_char(d, 'YYYYMMDD')::INTEGER,
        extract(isodow FROM d),
        to_char(d, 'FMDay'),
        extract(isodow FROM d) IN (6, 7),
+       CASE WHEN extract(isodow FROM d) IN (6, 7) THEN 'Weekend' ELSE 'Weekday' END,
        CASE WHEN extract(month FROM d) IN (12, 1, 2) THEN 'Summer'
             WHEN extract(month FROM d) IN (3, 4, 5) THEN 'Autumn'
             WHEN extract(month FROM d) IN (6, 7, 8) THEN 'Winter'

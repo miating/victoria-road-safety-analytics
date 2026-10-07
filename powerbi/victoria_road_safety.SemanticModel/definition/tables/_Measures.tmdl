@@ -1,0 +1,195 @@
+/// All report measures. The three fact tables share dimensions (date, location, severity) but
+/// are not related to each other, because relating them would create ambiguous filter paths.
+/// Where a filter must cross from one fact table to another, the measure copies the set of crash
+/// numbers across with TREATAS.
+table _Measures
+	lineageTag: 4c98bb95-2285-4aaf-b63e-4c3e38582fb3
+
+	/// Number of injury crashes. If a vehicle type is selected, only crashes that involved
+	/// a vehicle of that type (the filter reaches fact_crash through fact_vehicle).
+	measure 'Total Crashes' =
+			IF (
+			    ISFILTERED ( dim_vehicle_type ),
+			    CALCULATE (
+			        COUNTROWS ( fact_crash ),
+			        TREATAS ( VALUES ( fact_vehicle[accident_no] ), fact_crash[accident_no] )
+			    ),
+			    COUNTROWS ( fact_crash )
+			)
+		formatString: #,0
+		displayFolder: Crashes
+		lineageTag: a09590ac-af79-488d-83ce-51c5599b5900
+
+	/// Crashes in which at least one person was killed.
+	measure 'Fatal Crashes' = CALCULATE ( [Total Crashes], dim_severity[is_fatal] = TRUE () )
+		formatString: #,0
+		displayFolder: Crashes
+		lineageTag: 346ea5dd-2284-4835-aaba-4434de4fe3bd
+
+	/// Crashes whose most severe injury was a serious injury.
+	measure 'Serious Injury Crashes' = CALCULATE ( [Total Crashes], dim_severity[severity_code] = 2 )
+		formatString: #,0
+		displayFolder: Crashes
+		lineageTag: c73e1a01-b495-4b1d-b2ee-eaa287b51745
+
+	/// KSI: crashes in which someone was killed or seriously injured.
+	measure 'KSI Crashes' = CALCULATE ( [Total Crashes], dim_severity[is_fatal_or_serious] = TRUE () )
+		formatString: #,0
+		displayFolder: Crashes
+		lineageTag: 1a5010a3-552d-48fa-9e6e-40a8e856e671
+
+	/// Share of crashes that were fatal or serious - how severe crashes are when they happen.
+	measure 'KSI Share' = DIVIDE ( [KSI Crashes], [Total Crashes] )
+		formatString: 0.0%
+		displayFolder: Crashes
+		lineageTag: cea31953-b7bb-47b9-a901-a6394f1ef8a7
+
+	/// Share of crashes that were fatal.
+	measure 'Fatal Share' = DIVIDE ( [Fatal Crashes], [Total Crashes] )
+		formatString: 0.00%
+		displayFolder: Crashes
+		lineageTag: 506796aa-09b8-4693-9491-cffa93834c90
+
+	/// People killed, from the crash-level count.
+	measure 'Persons Killed' =
+			IF (
+			    ISFILTERED ( dim_vehicle_type ),
+			    CALCULATE (
+			        SUM ( fact_crash[persons_killed] ),
+			        TREATAS ( VALUES ( fact_vehicle[accident_no] ), fact_crash[accident_no] )
+			    ),
+			    SUM ( fact_crash[persons_killed] )
+			)
+		formatString: #,0
+		displayFolder: Crashes
+		lineageTag: 6c49dcdc-9996-4a56-843f-2ee341434926
+
+	/// Crashes per calendar day in the selection. Use instead of Total Crashes when comparing
+	/// weekdays or months, which contain different numbers of days.
+	measure 'Crashes per Day' = DIVIDE ( [Total Crashes], COUNTROWS ( dim_date ) )
+		formatString: #,0.0
+		displayFolder: Crashes
+		lineageTag: 75713f71-2c79-4003-8537-429142b43a7f
+
+	/// Change for the latest selected year against the year before. Blank unless both years are
+	/// complete, because months from 2025 onwards are only partly reported (DQ24).
+	measure 'Crashes YoY %' =
+			VAR LatestYear = MAX ( dim_date[year] )
+			VAR CurrentCrashes = CALCULATE ( [Total Crashes], dim_date[year] = LatestYear )
+			VAR PreviousCrashes = CALCULATE ( [Total Crashes], dim_date[year] = LatestYear - 1 )
+			VAR IncompleteDays =
+			    CALCULATE (
+			        COUNTROWS ( dim_date ),
+			        REMOVEFILTERS ( dim_date ),
+			        dim_date[year] IN { LatestYear, LatestYear - 1 },
+			        dim_date[is_analysis_period] = FALSE ()
+			    )
+			RETURN
+			    IF (
+			        IncompleteDays = 0 && PreviousCrashes > 0,
+			        DIVIDE ( CurrentCrashes - PreviousCrashes, PreviousCrashes )
+			    )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Year over year
+		lineageTag: f67a779f-55fb-4eb3-a925-b13c0ccbdaf9
+
+	/// Card subtitle for the YoY measure, e.g. "2024 vs 2023".
+	measure 'YoY Label' =
+			VAR LatestYear = MAX ( dim_date[year] )
+			RETURN LatestYear & " vs " & ( LatestYear - 1 )
+		displayFolder: Year over year
+		lineageTag: 29e505fb-92eb-435b-b5de-77aead90ccdc
+
+	/// LGA with the most KSI crashes in the selection ("most affected"). Unknown location is
+	/// excluded; ties return both names.
+	measure 'Most Affected LGA' =
+			VAR TopLga =
+			    TOPN (
+			        1,
+			        FILTER ( VALUES ( dim_location[lga_name] ), dim_location[lga_name] <> "Unknown" ),
+			        [KSI Crashes], DESC
+			    )
+			RETURN
+			    CONCATENATEX ( TopLga, dim_location[lga_name], ", " )
+		displayFolder: Location
+		lineageTag: de125245-98cd-45c9-ac69-2f7d9a801a4b
+
+	/// KSI crashes in the most affected LGA.
+	measure 'Most Affected LGA KSI Crashes' =
+			MAXX (
+			    FILTER ( VALUES ( dim_location[lga_name] ), dim_location[lga_name] <> "Unknown" ),
+			    [KSI Crashes]
+			)
+		formatString: #,0
+		displayFolder: Location
+		lineageTag: 59982d4e-6150-4520-8995-2cc9460cd2a7
+
+	/// People involved in crashes. Follows crash-level filters (weather, light, ...) through
+	/// fact_crash with TREATAS.
+	measure 'People Involved' =
+			CALCULATE (
+			    COUNTROWS ( fact_person ),
+			    TREATAS ( VALUES ( fact_crash[accident_no] ), fact_person[accident_no] )
+			)
+		formatString: #,0
+		displayFolder: People
+		lineageTag: ce18a0e4-67e8-469f-8b03-f6165b6e1c40
+
+	measure 'People Killed' = CALCULATE ( [People Involved], dim_injury_level[injury_level_code] = 1 )
+		formatString: #,0
+		displayFolder: People
+		lineageTag: ee5e75a9-21e2-4088-85cc-81a4278477eb
+
+	measure 'People Killed or Seriously Injured' = CALCULATE ( [People Involved], dim_injury_level[injury_level_code] IN { 1, 2 } )
+		formatString: #,0
+		displayFolder: People
+		lineageTag: fc74937e-a086-4da5-a778-3a6ce1555eff
+
+	/// Share of people involved who were killed or seriously injured.
+	measure 'People KSI %' = DIVIDE ( [People Killed or Seriously Injured], [People Involved] )
+		formatString: 0.0%
+		displayFolder: People
+		lineageTag: aa91e4c1-a1e3-45a3-8f91-29a54f2d29fc
+
+	measure 'Killed per 1,000 People Involved' = DIVIDE ( [People Killed], [People Involved] ) * 1000
+		formatString: 0.0
+		displayFolder: People
+		lineageTag: 3245e08d-c767-44aa-8e78-a67407268d85
+
+	/// Vehicles involved in crashes. Follows crash-level filters through fact_crash.
+	measure 'Vehicles Involved' =
+			CALCULATE (
+			    COUNTROWS ( fact_vehicle ),
+			    TREATAS ( VALUES ( fact_crash[accident_no] ), fact_vehicle[accident_no] )
+			)
+		formatString: #,0
+		displayFolder: Vehicles
+		lineageTag: 92160208-cec0-4235-bbe6-3c4b6a3c0c17
+
+	/// Share of vehicles whose crash was fatal or serious. Severity belongs to the crash: a car
+	/// that hits a pedestrian counts even if nobody in the car was hurt.
+	measure 'Vehicles in KSI Crash %' =
+			DIVIDE (
+			    CALCULATE ( [Vehicles Involved], dim_severity[is_fatal_or_serious] = TRUE () ),
+			    [Vehicles Involved]
+			)
+		formatString: 0.0%
+		displayFolder: Vehicles
+		lineageTag: 117ff5a4-bf07-4917-b303-d2248bcbd54a
+
+	/// Placeholder so the table can exist; hidden from report view.
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: 942be3d0-852e-4d77-9586-a0330273627e
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Placeholder = text], {})
+				in
+				    Source
+

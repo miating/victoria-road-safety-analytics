@@ -1,0 +1,114 @@
+table fact_person
+	lineageTag: bf492976-9f02-4bc9-99a4-2f687cc0c703
+
+	column accident_no
+		dataType: string
+		isHidden
+		lineageTag: 76a5b569-1b48-4ebf-8610-9d919da9fa78
+		summarizeBy: none
+		sourceColumn: accident_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column person_id
+		dataType: string
+		isHidden
+		lineageTag: b9ed19d3-7948-4a51-9655-3b3afb80f9e6
+		summarizeBy: none
+		sourceColumn: person_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: faf9f476-7c9e-4929-94c2-d4457bb48a41
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 71d9da5d-0aa0-4245-82a3-f26f20f5da50
+		summarizeBy: none
+		sourceColumn: location_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4ea6cd17-fce7-41fa-b337-6603f628bda3
+		summarizeBy: none
+		sourceColumn: severity_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column road_user_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c9c45be3-c5b8-44af-8613-21bff6e8f4ac
+		summarizeBy: none
+		sourceColumn: road_user_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column injury_level_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 485f12d6-cd35-4c5c-9d82-5b7dbd1f435d
+		summarizeBy: none
+		sourceColumn: injury_level_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column person_demographic_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cd33bd41-209f-4052-9ee5-bd7813567f4a
+		summarizeBy: none
+		sourceColumn: person_demographic_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_type_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 55cb3f15-256d-4642-835a-b9cf25125236
+		summarizeBy: none
+		sourceColumn: vehicle_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column taken_to_hospital
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7d0f6db0-fa8c-4f48-8e0c-8c8ddfad5b0c
+		summarizeBy: none
+		sourceColumn: taken_to_hospital
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_person = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_fact_person = 來源{[Schema="analytics",Item="fact_person"]}[Data]
+				in
+				    analytics_fact_person
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

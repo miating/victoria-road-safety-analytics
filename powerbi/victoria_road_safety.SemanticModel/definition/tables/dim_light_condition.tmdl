@@ -1,0 +1,52 @@
+table dim_light_condition
+	lineageTag: 8cfc74c6-68fc-4e0e-a051-a7162fb371cd
+
+	column light_condition_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4b3800d4-2022-4afa-b4e7-321785a32213
+		summarizeBy: none
+		sourceColumn: light_condition_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column light_condition_code
+		dataType: int64
+		formatString: 0
+		lineageTag: c7effc4c-37b6-47ee-a5d2-0354355dda29
+		summarizeBy: none
+		sourceColumn: light_condition_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column light_condition_desc
+		dataType: string
+		lineageTag: 7cf85d54-7bfb-468b-804f-dde6256d4594
+		summarizeBy: none
+		sourceColumn: light_condition_desc
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_dark
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ca8b4f75-5ba3-4473-b2c7-104fb2517e6c
+		summarizeBy: none
+		sourceColumn: is_dark
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_light_condition = m
+		mode: import
+		source =
+				let
+				    來源 = PostgreSQL.Database("localhost", "vic_road_safety"),
+				    analytics_dim_light_condition = 來源{[Schema="analytics",Item="dim_light_condition"]}[Data]
+				in
+				    analytics_dim_light_condition
+
+	annotation PBI_NavigationStepName = 導覽
+
+	annotation PBI_ResultType = Table
+

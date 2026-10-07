@@ -1,0 +1,129 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "risk_road_user",
+  "position": {
+    "x": 435,
+    "y": 406,
+    "z": 14,
+    "height": 276,
+    "width": 405,
+    "tabOrder": 14
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_road_user_type"
+                    }
+                  },
+                  "Property": "road_user_type_desc"
+                }
+              },
+              "queryRef": "dim_road_user_type.road_user_type_desc",
+              "nativeQueryRef": "road_user_type_desc",
+              "active": true,
+              "displayName": "Road user"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Killed per 1,000 People Involved"
+                }
+              },
+              "queryRef": "_Measures.Killed per 1,000 People Involved",
+              "nativeQueryRef": "Killed per 1,000 People Involved",
+              "displayName": "Killed per 1,000"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "People KSI %"
+                }
+              },
+              "queryRef": "_Measures.People KSI %",
+              "nativeQueryRef": "People KSI %",
+              "displayName": "Killed or seriously injured"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "People KSI %"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Road users: share killed or seriously injured'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

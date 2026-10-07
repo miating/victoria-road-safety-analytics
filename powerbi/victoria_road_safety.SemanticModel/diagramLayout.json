@@ -1,0 +1,255 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 411.52527899375718
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1080.3298304074924,
+            "y": 950.0658162614701
+          },
+          "nodeIndex": "dim_accident_type",
+          "nodeLineageTag": "6e354937-8460-42b5-b594-d3d142da1925",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 771.692282502182,
+            "y": 484.87255369097329
+          },
+          "nodeIndex": "dim_date",
+          "nodeLineageTag": "92ff94d7-a6f0-437b-880d-44a910e72c9c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50.08950616652487,
+            "y": 1284.0442462192241
+          },
+          "nodeIndex": "dim_injury_level",
+          "nodeLineageTag": "6f771594-70d4-455c-8c98-c6d7ad54c8d5",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1353.6392048460134,
+            "y": 318.48215772059461
+          },
+          "nodeIndex": "dim_light_condition",
+          "nodeLineageTag": "8cfc74c6-68fc-4e0e-a051-a7162fb371cd",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 814.83532723144776,
+            "y": 1157.3555740125682
+          },
+          "nodeIndex": "dim_location",
+          "nodeLineageTag": "7e0264d4-374f-4678-8196-56d540ea3e16",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 569.30785571862248,
+            "y": 1513.8062933307833
+          },
+          "nodeIndex": "dim_person_demographic",
+          "nodeLineageTag": "1784fac1-1a44-4243-bebe-174ed35bf612",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1317.4527816102591,
+            "y": -50
+          },
+          "nodeIndex": "dim_road_geometry",
+          "nodeLineageTag": "8501e113-22a0-426c-9435-7b6b9e315020",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1603.4395793175022,
+            "y": 547.281138842961
+          },
+          "nodeIndex": "dim_road_surface",
+          "nodeLineageTag": "c1ce4052-2b7b-46bd-934f-4a945765e2ca",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 1031.332655959146
+          },
+          "nodeIndex": "dim_road_user_type",
+          "nodeLineageTag": "b0bef489-ac8b-4d39-829d-5d3a280bb4c6",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 783.034018531573,
+            "y": 841.25868793663949
+          },
+          "nodeIndex": "dim_severity",
+          "nodeLineageTag": "f80e6828-2f2f-4b94-abb0-1822168a26a1",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1642.4211806548294,
+            "y": 258.67958990975467
+          },
+          "nodeIndex": "dim_speed_zone",
+          "nodeLineageTag": "4d49f614-619e-4bc7-b2b9-d0044b5a2a1c",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1370.1877581253302,
+            "y": 903.23284981020038
+          },
+          "nodeIndex": "dim_time",
+          "nodeLineageTag": "4de23dff-3610-4020-8e99-d3e2d950fc7f",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 185.45408160424904,
+            "y": 721.07009120240377
+          },
+          "nodeIndex": "dim_vehicle_type",
+          "nodeLineageTag": "3b26c53e-6451-41dd-8477-4a9c33b103a5",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1061.6581089247693,
+            "y": 179.85337350913323
+          },
+          "nodeIndex": "dim_weather",
+          "nodeLineageTag": "4aa1e807-2b08-4a43-8c0c-09ee1acb69a8",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1098.2025798598681,
+            "y": 550.43481336848686
+          },
+          "nodeIndex": "fact_crash",
+          "nodeLineageTag": "e54c0848-c7d8-4325-ad4d-7efdc9588ab4",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 340.06822176626133,
+            "y": 953.12932116324487
+          },
+          "nodeIndex": "fact_person",
+          "nodeLineageTag": "bf492976-9f02-4bc9-99a4-2f687cc0c703",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 482.09425928685278,
+            "y": 624.10035441665048
+          },
+          "nodeIndex": "fact_vehicle",
+          "nodeLineageTag": "a1dd688b-24d3-4639-b347-d279d4ea24fa",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1876.4211806548294,
+            "y": 731.90314666539166
+          },
+          "nodeIndex": "_Measures",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "所有資料表",
+      "zoomValue": 70.955543900968863,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "所有資料表",
+  "defaultDiagram": "所有資料表"
+}
