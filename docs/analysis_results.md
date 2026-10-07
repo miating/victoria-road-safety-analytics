@@ -264,7 +264,7 @@ Query: [`sql/analytics/11_location_concentration.sql`](../sql/analytics/11_locat
 
 Query: [`sql/analytics/12_weather_severity.sql`](../sql/analytics/12_weather_severity.sql)
 
-> **Approach:** group the 36 weather combinations into categories. A crash with several conditions is assigned to the first matching category in the CASE order below.
+> **Approach:** group the 36 weather combinations by dim_weather.weather_category. A crash with several conditions takes the first match in a fixed order (snow, fog, rain, wind, smoke/dust, clear) - defined once in sql/transform/analytics/01_dimensions.sql.
 >
 > **Caveat:** association only. Weather also changes who travels, where and how fast.
 

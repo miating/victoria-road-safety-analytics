@@ -160,38 +160,61 @@ GROUP BY c.accident_no;
 
 INSERT INTO analytics.dim_weather
     (weather_key, weather_desc, condition_count, has_clear, has_rain, has_snow, has_fog,
-     has_smoke, has_dust, has_strong_winds, is_not_known)
-VALUES (-1, 'Unknown', 0, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE);
+     has_smoke, has_dust, has_strong_winds, is_not_known, weather_category)
+VALUES (-1, 'Unknown', 0, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, 'Not known');
 
+-- weather_category gives each combination one reporting group. A crash with several
+-- conditions takes the first match in this order (e.g. 'Fog + Raining' is Fog).
 INSERT INTO analytics.dim_weather
     (weather_desc, condition_count, has_clear, has_rain, has_snow, has_fog,
-     has_smoke, has_dust, has_strong_winds, is_not_known)
-SELECT DISTINCT weather_desc, condition_count,
-       weather_desc LIKE '%Clear%',
-       weather_desc LIKE '%Raining%',
-       weather_desc LIKE '%Snowing%',
-       weather_desc LIKE '%Fog%',
-       weather_desc LIKE '%Smoke%',
-       weather_desc LIKE '%Dust%',
-       weather_desc LIKE '%Strong winds%',
-       weather_desc LIKE '%Not known%'
-FROM tmp_crash_weather
+     has_smoke, has_dust, has_strong_winds, is_not_known, weather_category)
+SELECT flags.*,
+       CASE WHEN is_not_known THEN 'Not known'
+            WHEN has_snow THEN 'Snow'
+            WHEN has_fog THEN 'Fog'
+            WHEN has_rain THEN 'Rain'
+            WHEN has_strong_winds THEN 'Strong winds'
+            WHEN has_smoke OR has_dust THEN 'Smoke or dust'
+            WHEN has_clear THEN 'Clear'
+            ELSE 'Other' END
+FROM (
+    SELECT DISTINCT weather_desc, condition_count,
+           weather_desc LIKE '%Clear%'        AS has_clear,
+           weather_desc LIKE '%Raining%'      AS has_rain,
+           weather_desc LIKE '%Snowing%'      AS has_snow,
+           weather_desc LIKE '%Fog%'          AS has_fog,
+           weather_desc LIKE '%Smoke%'        AS has_smoke,
+           weather_desc LIKE '%Dust%'         AS has_dust,
+           weather_desc LIKE '%Strong winds%' AS has_strong_winds,
+           weather_desc LIKE '%Not known%'    AS is_not_known
+    FROM tmp_crash_weather
+) AS flags
 ORDER BY weather_desc;
 
 INSERT INTO analytics.dim_road_surface
-    (road_surface_key, surface_desc, condition_count, has_dry, has_wet, has_muddy, has_icy, has_snowy, is_not_known)
-VALUES (-1, 'Unknown', 0, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE);
+    (road_surface_key, surface_desc, condition_count, has_dry, has_wet, has_muddy, has_icy, has_snowy,
+     is_not_known, surface_category)
+VALUES (-1, 'Unknown', 0, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, 'Not known');
 
 INSERT INTO analytics.dim_road_surface
-    (surface_desc, condition_count, has_dry, has_wet, has_muddy, has_icy, has_snowy, is_not_known)
-SELECT DISTINCT surface_desc, condition_count,
-       surface_desc LIKE '%Dry%',
-       surface_desc LIKE '%Wet%',
-       surface_desc LIKE '%Muddy%',
-       surface_desc LIKE '%Icy%',
-       surface_desc LIKE '%Snowy%',
-       surface_desc LIKE '%Unk.%'
-FROM tmp_crash_surface
+    (surface_desc, condition_count, has_dry, has_wet, has_muddy, has_icy, has_snowy, is_not_known,
+     surface_category)
+SELECT flags.*,
+       CASE WHEN is_not_known THEN 'Not known'
+            WHEN has_icy OR has_snowy THEN 'Icy or snowy'
+            WHEN has_wet OR has_muddy THEN 'Wet or muddy'
+            WHEN has_dry THEN 'Dry'
+            ELSE 'Other' END
+FROM (
+    SELECT DISTINCT surface_desc, condition_count,
+           surface_desc LIKE '%Dry%'   AS has_dry,
+           surface_desc LIKE '%Wet%'   AS has_wet,
+           surface_desc LIKE '%Muddy%' AS has_muddy,
+           surface_desc LIKE '%Icy%'   AS has_icy,
+           surface_desc LIKE '%Snowy%' AS has_snowy,
+           surface_desc LIKE '%Unk.%'  AS is_not_known
+    FROM tmp_crash_surface
+) AS flags
 ORDER BY surface_desc;
 
 -- People and vehicles ----------------------------------------------------------

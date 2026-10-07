@@ -95,7 +95,8 @@ CREATE TABLE IF NOT EXISTS analytics.dim_weather (
     has_smoke        BOOLEAN NOT NULL,
     has_dust         BOOLEAN NOT NULL,
     has_strong_winds BOOLEAN NOT NULL,
-    is_not_known     BOOLEAN NOT NULL
+    is_not_known     BOOLEAN NOT NULL,
+    weather_category TEXT NOT NULL                   -- one reporting group per combination
 );
 
 CREATE TABLE IF NOT EXISTS analytics.dim_road_surface (
@@ -107,7 +108,8 @@ CREATE TABLE IF NOT EXISTS analytics.dim_road_surface (
     has_muddy        BOOLEAN NOT NULL,
     has_icy          BOOLEAN NOT NULL,
     has_snowy        BOOLEAN NOT NULL,
-    is_not_known     BOOLEAN NOT NULL
+    is_not_known     BOOLEAN NOT NULL,
+    surface_category TEXT NOT NULL                   -- one reporting group per combination
 );
 
 CREATE TABLE IF NOT EXISTS analytics.dim_road_user_type (

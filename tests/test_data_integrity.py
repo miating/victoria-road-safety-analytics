@@ -136,3 +136,12 @@ def test_placeholder_nodes_are_not_locations(db):
 
 def test_placeholder_manufacture_years_removed(db):
     assert scalar(db, "SELECT count(*) FROM core.vehicle WHERE year_manufactured IN (0, 1900)") == 0
+
+
+@pytest.mark.parametrize(("dimension", "column"), [("dim_weather", "weather_category"),
+                                                   ("dim_road_surface", "surface_category")])
+def test_every_condition_combination_has_a_reporting_category(db, dimension, column):
+    valid = {"Clear", "Rain", "Fog", "Snow", "Strong winds", "Smoke or dust", "Other", "Not known",
+             "Dry", "Wet or muddy", "Icy or snowy"}
+    categories = {row[0] for row in db.execute(f"SELECT DISTINCT {column} FROM analytics.{dimension}")}
+    assert categories <= valid

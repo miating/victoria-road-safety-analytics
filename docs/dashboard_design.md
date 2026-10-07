@@ -1,3 +1,125 @@
 # Dashboard Design
 
-_To be completed in Phase 10, after the real dataset has been inspected._
+**Audience:** road safety and transport planning staff who need to see:
+
+- where injury crashes happen
+- when they happen
+- what is associated with the severe ones
+
+**Format:** three pages. Each page answers a group of questions from [`key_insights.md`](key_insights.md).
+
+How to connect and build the model is in [`powerbi/README.md`](../powerbi/README.md); the measures are in [`powerbi/measures.dax`](../powerbi/measures.dax).
+
+## Principles
+
+- **Every visual answers a stated question.** If a visual does not, it is removed.
+- **Severity uses the same colours everywhere:**
+
+  | Severity | Colour | Hex |
+  |---|---|---|
+  | Fatal | dark red | `#9B1C1C` |
+  | Serious injury | orange | `#E07B24` |
+  | Other injury | grey | `#9CA3AF` |
+
+  Labels or legends always accompany the colours, so the report works for colour-blind readers.
+- **Rates where counts would mislead.**
+  - Weekdays and months use *crashes per day*.
+  - Risk factors use *KSI share*.
+- **Limitations are on the page, not hidden in documentation.** Every page has a footer:
+
+  > Injury crashes only. Complete years 2012-2024. Counts are not adjusted for traffic volume; associations do not imply causation. Source: DTP Victoria road crash data (CC BY 4.0).
+
+- **Unknown values are shown, not filtered out.** "Unknown" and "Not known" appear as their own categories.
+
+## Page 1 - Executive Overview
+
+**Questions:**
+
+- How many injury crashes, and how many fatal or serious ones?
+- Are they going up or down?
+- Where and when do they concentrate?
+
+```
++------------------------------------------------------------------------------+
+| Year | LGA | Severity | Vehicle type                       (slicers)          |
++-------------+-------------+-------------+-------------+-----------------------+
+| Total       | Fatal       | Serious     | YoY change  | Most affected LGA     |
+| crashes     | crashes     | injury      | 2024 v 2023 | (most KSI crashes)    |
++-------------+-------------+-------------+-------------+-----------------------+
+| Crashes and KSI crashes by year (line)  | Map: crash locations (bubbles)     |
++-----------------------------------------+                                    |
+| Severity distribution (bar)             |                                    |
++-----------------------------------------+------------------------------------+
+| Day x hour heatmap: crashes per day (matrix, colour scale)                   |
++------------------------------------------------------------------------------+
+```
+
+| Visual | Fields / measures | Answers |
+|---|---|---|
+| KPI cards | `Total Crashes`, `Fatal Crashes`, `Serious Injury Crashes`, `Crashes YoY %` (subtitle `YoY Label`), `Most Affected LGA` | Headline scale and direction |
+| Line chart | `dim_date[year]`; `Total Crashes`, `KSI Crashes` | Trend. Drill down to `year_month` for monthly detail |
+| Bar chart | `dim_severity[severity_desc]`; `Total Crashes` | Severity mix |
+| Map (bubble) | `dim_location[latitude]`, `[longitude]`; size `Total Crashes`; tooltip `location_label`, `lga_name`, `KSI Crashes` | Where. Visual-level **Top N filter: 500 locations by Total Crashes**, so the map stays fast and readable |
+| Matrix heatmap | rows `day_name`, columns `dim_time[hour]`; `Crashes per Day` with background colour scale | When |
+
+**Slicers:**
+
+| Slicer | Field |
+|---|---|
+| Year | `dim_date[year]`, between |
+| LGA | `dim_location[lga_name]`, dropdown with search |
+| Severity | `dim_severity[severity_desc]` |
+| Vehicle type | `dim_vehicle_type[vehicle_category]` |
+
+The vehicle-type slicer filters crash measures through `TREATAS` (see `measures.dax`).
+
+## Page 2 - Location & Time
+
+**Questions:**
+
+- Which LGAs and locations have the most crashes?
+- Which hours and days?
+- Is there seasonality?
+
+| Visual | Fields / measures | Answers |
+|---|---|---|
+| Map (large) | as page 1. Bubble colour: `KSI Share` (light to dark) | Hotspots, and how severe they are |
+| Bar chart: LGA ranking | `lga_name`; `Total Crashes`. Top N 15. Tooltip `KSI Share` | Which LGAs have the most crashes. Subtitle: "Counts reflect population and traffic" |
+| Table: top locations | `location_label`, `lga_name`; `Total Crashes`, `KSI Crashes`. Top N 20 | Specific intersections to investigate |
+| Column + line: by hour | `dim_time[hour]`; columns `Total Crashes`, line `KSI Share` (secondary axis) | Busiest hours vs most severe hours (afternoon peak vs 2-4 am) |
+| Clustered column: weekday vs weekend | `time_band`; `Crashes per Day`; legend `is_weekend` | Weekend nights |
+| Line: by month | `month_name`; `Crashes per Day`. Tooltip `season` | Seasonality (mild) |
+
+**Slicers:** Year and LGA (synced with page 1).
+
+## Page 3 - Risk Factors
+
+**Questions:**
+
+- Which conditions, vehicles and road users are associated with more severe outcomes?
+
+Every visual here shows a *share* or *rate* with the count in the tooltip, because the categories differ hugely in size. For example, there are 69 snow crashes and 146,258 clear-weather crashes.
+
+| Visual | Fields / measures | Answers |
+|---|---|---|
+| Bar: weather | `dim_weather[weather_category]`; `KSI Share` | Weather and severity (fog highest, rain not higher than clear) |
+| Clustered bar: surface by speed | `dim_speed_zone[speed_band]`; `KSI Share`; legend `dim_road_surface[surface_category]` | Wet vs dry *within the same speed band*. Speed matters more than surface |
+| Bar: light condition | `light_condition_desc`; `KSI Share`, `Fatal Share` | Darkness without street lights is the most severe, and mostly on high-speed roads |
+| Bar: vehicle category | `vehicle_category`; `Vehicles in KSI Crash %` | Motorcycles and heavy vehicles |
+| Bar: road user type | `road_user_type_desc`; `People KSI %`, `Killed per 1,000 People Involved` | Pedestrians and motorcyclists most at risk |
+| Column: age group | `age_group`; `People KSI %` | Severity rises with age |
+
+**Slicers:** Year and LGA (synced).
+
+Person and vehicle visuals also follow crash-level filters through `TREATAS`.
+
+## Decisions and trade-offs
+
+| Decision | Alternative | Why |
+|---|---|---|
+| Import mode | DirectQuery | ~1M rows, monthly data. Import is faster and supports all DAX |
+| Star schema imported, not views | Import the `vw_*` views | Slicers must filter every visual; the aggregated views cannot be related to each other |
+| `TREATAS` between facts | Bi-directional relationships between facts | Avoids ambiguous filter paths and keeps every relationship one-to-many and single direction |
+| Report-wide filter on complete years | Show all years | 2025+ months are incomplete and would look like a fall in crashes |
+| Categories (`weather_category`, `surface_category`) defined in SQL | Calculated columns in Power BI | One definition shared by the SQL analysis and the dashboard |
+| Map Top N 500 | All 144k locations | Performance and readability; the full ranking lives in `mv_location_hotspots` |
