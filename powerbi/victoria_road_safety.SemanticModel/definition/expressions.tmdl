@@ -1,0 +1,5 @@
+/// Folder holding data/reference. Change it in Transform data > Manage parameters after cloning.
+expression ReferenceDataFolder = "C:\path\to\victoria-road-safety-analytics\data\reference" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: e7142944-2aa7-4ce6-8146-6ee6776add71
+
+	annotation PBI_ResultType = Text

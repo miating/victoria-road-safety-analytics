@@ -28,7 +28,6 @@
               },
               "queryRef": "dim_time.time_band",
               "nativeQueryRef": "time_band",
-              "active": true,
               "displayName": "Time of day"
             }
           ]
@@ -87,7 +86,8 @@
             },
             "direction": "Ascending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

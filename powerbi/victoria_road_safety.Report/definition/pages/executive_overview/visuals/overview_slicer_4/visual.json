@@ -28,7 +28,6 @@
               },
               "queryRef": "dim_vehicle_type.vehicle_category",
               "nativeQueryRef": "vehicle_category",
-              "active": true,
               "displayName": "Vehicle type"
             }
           ]

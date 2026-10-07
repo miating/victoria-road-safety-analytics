@@ -28,7 +28,6 @@
               },
               "queryRef": "dim_time.hour_key",
               "nativeQueryRef": "hour_key",
-              "active": true,
               "displayName": "Hour"
             }
           ]
@@ -87,7 +86,8 @@
             },
             "direction": "Ascending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

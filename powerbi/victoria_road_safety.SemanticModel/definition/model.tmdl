@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["dim_accident_type","dim_date","dim_injury_level","dim_location","dim_person_demographic","dim_light_condition","dim_road_geometry","dim_road_surface","dim_road_user_type","dim_severity","dim_speed_zone","dim_time","dim_vehicle_type","dim_weather","fact_crash","fact_person","fact_vehicle","_Measures"]
+annotation PBI_QueryOrder = ["dim_accident_type","dim_date","dim_injury_level","dim_location","dim_person_demographic","dim_light_condition","dim_road_geometry","dim_road_surface","dim_road_user_type","dim_severity","dim_speed_zone","dim_time","dim_vehicle_type","dim_weather","fact_crash","fact_person","fact_vehicle","lga_population","road_safety_target","_Measures"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -30,6 +30,8 @@ ref table dim_weather
 ref table fact_crash
 ref table fact_person
 ref table fact_vehicle
+ref table lga_population
+ref table road_safety_target
 ref table _Measures
 
 ref cultureInfo zh-TW

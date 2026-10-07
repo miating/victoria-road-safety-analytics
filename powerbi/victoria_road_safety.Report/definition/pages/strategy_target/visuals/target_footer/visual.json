@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "target_footer",
+  "position": {
+    "x": 20,
+    "y": 690,
+    "z": 99,
+    "height": 26,
+    "width": 1240,
+    "tabOrder": 99
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Goal: Victorian Road Safety Strategy 2021-2030, halve road deaths by 2030. It names no formal baseline year; this page assumes 2019 (266 deaths) and a straight-line path. 2025 onwards excluded as incomplete.",
+                    "textStyle": {
+                      "fontSize": "8pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

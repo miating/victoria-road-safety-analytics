@@ -1,0 +1,85 @@
+/// Estimated resident population by Victorian LGA and year (ABS, 30 June), shaped in Power Query.
+/// Not related to the star schema: population is LGA x year, so measures pass the LGA and year
+/// filters across with TREATAS. Names follow current (2025) LGA boundaries.
+table lga_population
+	isHidden
+	lineageTag: f19d7c11-0752-4986-aadc-4e3131d3939e
+
+	column lga_code
+		dataType: int64
+		formatString: 0
+		lineageTag: 899e7108-0e3a-4230-90c1-9c6f45c011a6
+		summarizeBy: none
+		sourceColumn: lga_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column abs_lga_name
+		dataType: string
+		lineageTag: 99760d24-af8c-410d-8d0c-c12ac2a1b41a
+		summarizeBy: none
+		sourceColumn: abs_lga_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d507551-e13d-4d71-8c12-3e5ce33ae5f6
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column population
+		dataType: int64
+		formatString: #,0
+		lineageTag: 9f0c8227-d2e9-4b8a-8de3-1b8d8c47f0c2
+		summarizeBy: sum
+		sourceColumn: population
+
+		annotation SummarizationSetBy = Automatic
+
+	column lga_name
+		dataType: string
+		lineageTag: bfbc18bb-1b94-4790-bda2-80a2380f8309
+		summarizeBy: none
+		sourceColumn: lga_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition lga_population = m
+		mode: import
+		source =
+				let
+				    // ABS Regional population 2024-25, data cube 3218.0 Table 1 (CC BY 4.0)
+				    Source = Excel.Workbook(File.Contents(ReferenceDataFolder & "\32180DS0004_2001-25.xlsx"), null, true),
+				    Sheet = Source{[Item = "Table 1", Kind = "Sheet"]}[Data],
+				    // Rows 1-6 are titles and a two-row header (years, then units); data starts on row 7
+				    DataRows = Table.Skip(Sheet, 6),
+				    YearNames = List.Transform({2001..2025}, Text.From),
+				    Renamed = Table.RenameColumns(
+				        DataRows,
+				        List.Zip({List.Transform({1..27}, each "Column" & Text.From(_)), {"lga_code", "abs_lga_name"} & YearNames})
+				    ),
+				    Kept = Table.SelectColumns(Renamed, {"lga_code", "abs_lga_name"} & YearNames),
+				    // Victorian LGAs have codes 2xxxx; 29399 is Unincorporated Vic
+				    // Header and footnote rows have text or nothing in the code column; they become null here
+				    Coded = Table.TransformColumns(Kept, {{"lga_code", each try Number.From(_) otherwise null}}),
+				    Victoria = Table.SelectRows(Coded, each [lga_code] <> null and [lga_code] >= 20000 and [lga_code] < 29000),
+				    Unpivoted = Table.UnpivotOtherColumns(Victoria, {"lga_code", "abs_lga_name"}, "year", "population"),
+				    // Conform ABS names to the crash data: 'Greater Geelong' -> GEELONG, 'Kingston (Vic.)' -> KINGSTON
+				    Conformed = Table.AddColumn(
+				        Unpivoted,
+				        "lga_name",
+				        each Text.Upper(Text.Trim(Text.Replace(Text.Replace([abs_lga_name], " (Vic.)", ""), "Greater ", ""))),
+				        type text
+				    ),
+				    Typed = Table.TransformColumnTypes(
+				        Conformed,
+				        {{"lga_code", Int64.Type}, {"abs_lga_name", type text}, {"year", Int64.Type}, {"population", Int64.Type}}
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

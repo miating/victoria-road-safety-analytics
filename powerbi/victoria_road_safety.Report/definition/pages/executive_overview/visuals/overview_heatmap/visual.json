@@ -13,26 +13,6 @@
     "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_time"
-                    }
-                  },
-                  "Property": "hour_key"
-                }
-              },
-              "queryRef": "dim_time.hour_key",
-              "nativeQueryRef": "hour_key",
-              "active": true,
-              "displayName": "Hour"
-            }
-          ]
-        },
         "Rows": {
           "projections": [
             {
@@ -48,8 +28,26 @@
               },
               "queryRef": "dim_date.day_name",
               "nativeQueryRef": "day_name",
-              "active": true,
               "displayName": "Day"
+            }
+          ]
+        },
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_time"
+                    }
+                  },
+                  "Property": "hour_key"
+                }
+              },
+              "queryRef": "dim_time.hour_key",
+              "nativeQueryRef": "hour_key",
+              "displayName": "Hour"
             }
           ]
         },

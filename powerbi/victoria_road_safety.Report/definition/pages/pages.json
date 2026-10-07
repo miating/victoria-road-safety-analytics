@@ -4,7 +4,9 @@
     "executive_overview",
     "location_time",
     "risk_factors",
+    "lga_rates",
+    "strategy_target",
     "model_check"
   ],
-  "activePageName": "risk_factors"
+  "activePageName": "executive_overview"
 }

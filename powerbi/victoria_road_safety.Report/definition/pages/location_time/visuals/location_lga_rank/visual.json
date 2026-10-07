@@ -28,27 +28,7 @@
               },
               "queryRef": "dim_location.lga_name",
               "nativeQueryRef": "lga_name",
-              "active": true,
               "displayName": "LGA"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "KSI Share"
-                }
-              },
-              "queryRef": "_Measures.KSI Share",
-              "nativeQueryRef": "KSI Share",
-              "displayName": "KSI share"
             }
           ]
         },
@@ -70,6 +50,25 @@
               "displayName": "Crashes"
             }
           ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "KSI Share"
+                }
+              },
+              "queryRef": "_Measures.KSI Share",
+              "nativeQueryRef": "KSI Share",
+              "displayName": "KSI share"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -87,7 +86,8 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

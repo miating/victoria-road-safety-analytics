@@ -28,27 +28,7 @@
               },
               "queryRef": "dim_road_user_type.road_user_type_desc",
               "nativeQueryRef": "road_user_type_desc",
-              "active": true,
               "displayName": "Road user"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Killed per 1,000 People Involved"
-                }
-              },
-              "queryRef": "_Measures.Killed per 1,000 People Involved",
-              "nativeQueryRef": "Killed per 1,000 People Involved",
-              "displayName": "Killed per 1,000"
             }
           ]
         },
@@ -70,6 +50,25 @@
               "displayName": "Killed or seriously injured"
             }
           ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Killed per 1,000 People Involved"
+                }
+              },
+              "queryRef": "_Measures.Killed per 1,000 People Involved",
+              "nativeQueryRef": "Killed per 1,000 People Involved",
+              "displayName": "Killed per 1,000"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -87,7 +86,8 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

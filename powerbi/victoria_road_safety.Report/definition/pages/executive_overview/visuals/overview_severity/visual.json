@@ -28,7 +28,6 @@
               },
               "queryRef": "dim_severity.severity_desc",
               "nativeQueryRef": "severity_desc",
-              "active": true,
               "displayName": "Severity"
             }
           ]
@@ -68,7 +67,8 @@
             },
             "direction": "Ascending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "objects": {

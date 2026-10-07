@@ -28,27 +28,7 @@
               },
               "queryRef": "dim_vehicle_type.vehicle_category",
               "nativeQueryRef": "vehicle_category",
-              "active": true,
               "displayName": "Vehicle"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Vehicles Involved"
-                }
-              },
-              "queryRef": "_Measures.Vehicles Involved",
-              "nativeQueryRef": "Vehicles Involved",
-              "displayName": "Vehicles involved"
             }
           ]
         },
@@ -70,6 +50,25 @@
               "displayName": "In a KSI crash"
             }
           ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Vehicles Involved"
+                }
+              },
+              "queryRef": "_Measures.Vehicles Involved",
+              "nativeQueryRef": "Vehicles Involved",
+              "displayName": "Vehicles involved"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -87,7 +86,8 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

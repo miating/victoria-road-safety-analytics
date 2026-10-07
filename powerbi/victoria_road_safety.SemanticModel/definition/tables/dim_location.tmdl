@@ -124,6 +124,15 @@ table dim_location
 
 		annotation SummarizationSetBy = Automatic
 
+	/// LGA name on current boundaries: Moreland was renamed Merri-bek in 2022 and appears under
+	/// both names in the crash data. Used to match ABS population; lga_name is left as recorded.
+	column lga_name_current = IF ( dim_location[lga_name] = "MORELAND", "MERRI-BEK", dim_location[lga_name] )
+		dataType: string
+		lineageTag: 6da289a8-6111-4822-b30c-627d31eda5df
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_location = m
 		mode: import
 		source =

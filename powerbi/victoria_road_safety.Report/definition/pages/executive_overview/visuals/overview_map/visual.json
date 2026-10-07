@@ -13,6 +13,44 @@
     "visualType": "azureMap",
     "query": {
       "queryState": {
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_location"
+                    }
+                  },
+                  "Property": "latitude"
+                }
+              },
+              "queryRef": "dim_location.latitude",
+              "nativeQueryRef": "latitude",
+              "displayName": "Latitude"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_location"
+                    }
+                  },
+                  "Property": "longitude"
+                }
+              },
+              "queryRef": "dim_location.longitude",
+              "nativeQueryRef": "longitude",
+              "displayName": "Longitude"
+            }
+          ]
+        },
         "Size": {
           "projections": [
             {
@@ -110,75 +148,8 @@
               "displayName": "KSI share"
             }
           ]
-        },
-        "X": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_location"
-                    }
-                  },
-                  "Property": "longitude"
-                }
-              },
-              "queryRef": "dim_location.longitude",
-              "nativeQueryRef": "longitude",
-              "displayName": "Longitude"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_location"
-                    }
-                  },
-                  "Property": "latitude"
-                }
-              },
-              "queryRef": "dim_location.latitude",
-              "nativeQueryRef": "latitude",
-              "displayName": "Latitude"
-            }
-          ]
         }
       }
-    },
-    "objects": {
-      "mapControls": [
-        {
-          "properties": {
-            "zoom": {
-              "expr": {
-                "Literal": {
-                  "Value": "3.86D"
-                }
-              }
-            },
-            "centerLatitude": {
-              "expr": {
-                "Literal": {
-                  "Value": "-36.39493109595042D"
-                }
-              }
-            },
-            "centerLongitude": {
-              "expr": {
-                "Literal": {
-                  "Value": "144.52446499999996D"
-                }
-              }
-            }
-          }
-        }
-      ]
     },
     "visualContainerObjects": {
       "title": [

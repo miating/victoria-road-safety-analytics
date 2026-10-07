@@ -28,27 +28,7 @@
               },
               "queryRef": "dim_light_condition.light_condition_desc",
               "nativeQueryRef": "light_condition_desc",
-              "active": true,
               "displayName": "Light"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Crashes"
-                }
-              },
-              "queryRef": "_Measures.Total Crashes",
-              "nativeQueryRef": "Total Crashes",
-              "displayName": "Crashes"
             }
           ]
         },
@@ -85,6 +65,25 @@
               "displayName": "Fatal share"
             }
           ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Crashes"
+                }
+              },
+              "queryRef": "_Measures.Total Crashes",
+              "nativeQueryRef": "Total Crashes",
+              "displayName": "Crashes"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -102,7 +101,8 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

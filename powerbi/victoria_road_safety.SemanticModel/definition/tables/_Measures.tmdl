@@ -177,6 +177,118 @@ table _Measures
 		displayFolder: Vehicles
 		lineageTag: 117ff5a4-bf07-4917-b303-d2248bcbd54a
 
+	/// Residents (ABS estimated resident population) summed over the selected years and LGAs,
+	/// so a rate over several years is per person-year. LGAs that ABS does not list (alpine
+	/// resorts, Unknown) have no population and are left out.
+	measure 'Resident Population' =
+			CALCULATE (
+			    SUM ( lga_population[population] ),
+			    TREATAS ( VALUES ( dim_date[year] ), lga_population[year] ),
+			    TREATAS ( VALUES ( dim_location[lga_name_current] ), lga_population[lga_name] )
+			)
+		formatString: #,0
+		displayFolder: Rates
+		lineageTag: cc298135-62ea-4190-8509-047cac321f66
+
+	/// KSI crashes in LGAs that have a population figure, so numerator and denominator match.
+	/// KEEPFILTERS: intersect with the current LGA instead of replacing it.
+	measure 'KSI Crashes in Populated LGAs' =
+			CALCULATE (
+			    [KSI Crashes],
+			    KEEPFILTERS ( TREATAS ( VALUES ( lga_population[lga_name] ), dim_location[lga_name_current] ) )
+			)
+		formatString: #,0
+		displayFolder: Rates
+		lineageTag: f62d8e6e-0c2e-4ad4-9c84-ff6e5fbc0c33
+
+	/// KSI crashes per 100,000 residents per year. Crashes are counted where they happen and
+	/// residents where they live, so LGAs with through traffic or visitors (the CBD, tourist
+	/// routes) score high. A per-resident rate, not a measure of traffic exposure.
+	measure 'KSI Crashes per 100k Residents' = DIVIDE ( [KSI Crashes in Populated LGAs], [Resident Population] ) * 100000
+		formatString: 0.0
+		displayFolder: Rates
+		lineageTag: e4c526bc-bb94-47d2-9fc9-12431aefa80f
+
+	/// Rate for the whole state in the selected years, ignoring the LGA, for comparison.
+	measure 'Victoria KSI per 100k Residents' = CALCULATE ( [KSI Crashes per 100k Residents], REMOVEFILTERS ( dim_location ) )
+		formatString: 0.0
+		displayFolder: Rates
+		lineageTag: 04050d38-9b1a-44ba-9265-ce7fcd72f667
+
+	/// Difference from the state rate: positive means above the Victorian average. Blank where
+	/// the LGA has no population figure.
+	measure 'KSI Rate vs Victoria %' =
+			VAR Rate = [KSI Crashes per 100k Residents]
+			VAR StateRate = [Victoria KSI per 100k Residents]
+			RETURN IF ( NOT ISBLANK ( Rate ), DIVIDE ( Rate - StateRate, StateRate ) )
+		formatString: +0%;-0%;0%
+		displayFolder: Rates
+		lineageTag: abc5cfd5-7f88-4b47-afee-e469d785a378
+
+	/// People killed in each year of the target axis. Years outside the complete-years filter
+	/// (2025 onwards) are blank because the report filter on dim_date still applies.
+	measure 'Deaths (Actual)' = CALCULATE ( [Persons Killed], TREATAS ( VALUES ( road_safety_target[year] ), dim_date[year] ) )
+		formatString: #,0
+		displayFolder: Strategy target
+		lineageTag: 78521156-be52-401c-8e36-1cb1c2f72640
+
+	/// Deaths in 2019, the latest year the Road Safety Strategy cites (266). The strategy does not
+	/// name a formal baseline year; 2019 is the assumption used here.
+	measure 'Baseline Deaths 2019' = CALCULATE ( [Persons Killed], REMOVEFILTERS ( dim_date ), dim_date[year] = 2019 )
+		formatString: #,0
+		displayFolder: Strategy target
+		lineageTag: 5c8c0cfd-1680-4782-8b81-be3d5cda02ab
+
+	/// Straight-line path from the 2019 baseline to half of it in 2030. Blank before 2019.
+	measure 'Target Deaths' =
+			VAR TargetYear = SELECTEDVALUE ( road_safety_target[year] )
+			RETURN
+			    IF (
+			        TargetYear >= 2019,
+			        [Baseline Deaths 2019] * ( 1 - 0.5 * ( TargetYear - 2019 ) / 11 )
+			    )
+		formatString: #,0
+		displayFolder: Strategy target
+		lineageTag: 334132e9-c5db-496d-920f-c483fdc3d2a9
+
+	/// Latest year whose twelve months are all reported (DQ24).
+	measure 'Latest Complete Year' = CALCULATE ( MAX ( dim_date[year] ), REMOVEFILTERS ( dim_date ), dim_date[is_analysis_period] = TRUE () )
+		formatString: 0
+		displayFolder: Strategy target
+		lineageTag: c1e5c6f3-725b-4e0c-9f56-95a2c607d743
+
+	/// Deaths in the latest complete year.
+	measure 'Deaths Latest Year' =
+			VAR LatestYear = [Latest Complete Year]
+			RETURN CALCULATE ( [Persons Killed], REMOVEFILTERS ( dim_date ), dim_date[year] = LatestYear )
+		formatString: #,0
+		displayFolder: Strategy target
+		lineageTag: 1fe50aa0-9304-4e1b-be90-553499e7264e
+
+	/// Where the straight-line path says deaths should be in the latest complete year.
+	measure 'Target Deaths Latest Year' =
+			VAR LatestYear = [Latest Complete Year]
+			RETURN [Baseline Deaths 2019] * ( 1 - 0.5 * ( LatestYear - 2019 ) / 11 )
+		formatString: #,0
+		displayFolder: Strategy target
+		lineageTag: fd986ba7-7656-4671-a2a9-db2a99590dbc
+
+	/// How far the latest year is above (+) or below (-) the target path.
+	measure 'Deaths vs Target %' = DIVIDE ( [Deaths Latest Year] - [Target Deaths Latest Year], [Target Deaths Latest Year] )
+		formatString: +0%;-0%;0%
+		displayFolder: Strategy target
+		lineageTag: d6387e40-f72f-4379-9bea-5fd911d5734a
+
+	/// Constant yearly fall needed from the latest complete year to reach half the baseline in 2030.
+	measure 'Required Annual Reduction to 2030' =
+			VAR YearsLeft = 2030 - [Latest Complete Year]
+			VAR Target2030 = [Baseline Deaths 2019] / 2
+			RETURN
+			    IF ( YearsLeft > 0 && [Deaths Latest Year] > 0, 1 - ( Target2030 / [Deaths Latest Year] ) ^ ( 1 / YearsLeft ) )
+		formatString: 0.0%
+		displayFolder: Strategy target
+		lineageTag: 843b9eb6-8137-45c6-99fa-c716b6bbdbbb
+
 	/// Placeholder so the table can exist; hidden from report view.
 	column Placeholder
 		dataType: string

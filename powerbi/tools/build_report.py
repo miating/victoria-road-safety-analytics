@@ -174,6 +174,69 @@ def risk_factors_page() -> dict:
     return {"name": "risk_factors", "displayName": "Risk Factors", "visuals": visuals}
 
 
+
+RATES_FOOTER = ("Injury crashes only, complete years 2012-2024. Population: ABS estimated resident population by LGA "
+                "(CC BY 4.0), summed over the selected years. Crashes are counted where they happen, residents where they live.")
+
+TARGET_FOOTER = ("Goal: Victorian Road Safety Strategy 2021-2030, halve road deaths by 2030. It names no formal baseline year; "
+                 "this page assumes 2019 (266 deaths) and a straight-line path. 2025 onwards excluded as incomplete.")
+
+
+def lga_rates_page() -> dict:
+    page = "rates"
+    lga_current = column("dim_location", "lga_name_current")
+    rate = measure("KSI Crashes per 100k Residents")
+    visuals = header(page, "LGA Rates - KSI crashes per 100,000 residents", [(YEAR, "Year", "Between")])
+    visuals += [
+        card(f"{page}_kpi_1", (20, 122, 300, 106), measure("Victoria KSI per 100k Residents"),
+             "Victoria KSI per 100k residents", z=10),
+        card(f"{page}_kpi_2", (330, 122, 300, 106), measure("KSI Crashes in Populated LGAs"), "KSI crashes", z=11),
+        card(f"{page}_kpi_3", (640, 122, 300, 106), measure("Resident Population"), "Resident person-years", z=12),
+        textbox(f"{page}_note", (950, 122, 310, 106),
+                "Counts favour big LGAs: Casey has many crashes but a below-average rate. High rural rates "
+                "partly reflect visitors and through traffic, not only local residents.", size=9, z=13),
+        visual(f"{page}_top_rate", "clusteredBarChart", (20, 236, 600, 448),
+               roles={"Category": [(lga_current, "LGA")], "Y": [(rate, "KSI per 100k residents")],
+                      "Tooltips": [(measure("KSI Crashes in Populated LGAs"), "KSI crashes"),
+                                   (measure("KSI Rate vs Victoria %"), "vs Victoria")]},
+               title="Top 15 LGAs by KSI crashes per 100k residents",
+               sort=[(rate, DESCENDING)], filters=[top_n_filter(f"{page}_rate_top", lga_current, rate, 15)],
+               objects=labelled_bars(), z=14),
+        visual(f"{page}_table", "tableEx", (630, 236, 630, 448),
+               roles={"Values": [(lga_current, "LGA"), (measure("KSI Crashes in Populated LGAs"), "KSI crashes"),
+                                 (rate, "KSI per 100k"), (measure("KSI Rate vs Victoria %"), "vs Victoria"),
+                                 (TOTAL, "All injury crashes")]},
+               title="All LGAs: count vs rate", sort=[(rate, DESCENDING)], objects=table_style(8), z=15),
+        textbox(f"{page}_footer", (20, 690, 1240, 26), RATES_FOOTER, size=8, z=99),
+    ]
+    return {"name": "lga_rates", "displayName": "LGA Rates", "visuals": visuals}
+
+
+def strategy_target_page() -> dict:
+    page = "target"
+    target_year = column("road_safety_target", "year")
+    visuals = [textbox(f"{page}_title", (20, 8, 1240, 40),
+                       "Road Deaths vs the 2030 Strategy Goal (halve road deaths)", size=18, bold=True)]
+    kpis = [
+        (measure("Deaths Latest Year"), "Deaths in 2024"),
+        (measure("Target Deaths Latest Year"), "Target path for that year"),
+        (measure("Deaths vs Target %"), "Actual vs target path"),
+        (measure("Required Annual Reduction to 2030"), "Yearly fall needed to 2030"),
+        (measure("Baseline Deaths 2019"), "Baseline: deaths in 2019"),
+    ]
+    for i, (value, title) in enumerate(kpis):
+        visuals.append(card(f"{page}_kpi_{i + 1}", (20 + i * 250, 56, 240, 106), value, title, z=10 + i))
+    visuals += [
+        visual(f"{page}_trend", "lineChart", (20, 172, 1240, 510),
+               roles={"Category": [(target_year, "Year")],
+                      "Y": [(measure("Deaths (Actual)"), "Deaths (actual)"), (measure("Target Deaths"), "Target path")]},
+               title="Road deaths per year against a straight-line path to half the 2019 level by 2030",
+               sort=[(target_year, ASCENDING)], z=20),
+        textbox(f"{page}_footer", (20, 690, 1240, 26), TARGET_FOOTER, size=8, z=99),
+    ]
+    return {"name": "strategy_target", "displayName": "Strategy Target", "visuals": visuals}
+
+
 def model_check_page() -> dict:
     """Cards to compare with the SQL values in powerbi/README.md (section 7)."""
     checks = [
@@ -186,19 +249,23 @@ def model_check_page() -> dict:
         ("Most Affected LGA", "Most Affected LGA - expect GEELONG", None),
         ("Total Crashes", "Crashes involving a motorcycle - expect 26,172",
          [categorical_filter("motorcycle_only", column("dim_vehicle_type", "vehicle_category"), ["Motorcycle"])]),
+        ("Resident Population", "Resident Population - expect 82,291,728", None),
+        ("KSI Crashes per 100k Residents", "KSI per 100k Residents - expect 85.1", None),
+        ("Deaths vs Target %", "Deaths vs Target % - expect +38%", None),
+        ("Required Annual Reduction to 2030", "Required Annual Reduction - expect 11.9%", None),
     ]
     visuals = [textbox("check_title", (20, 10, 1240, 50),
                        "Model check: each card should match the value in its title (2012-2024)", size=16, bold=True)]
     for i, (measure_name, title, filters) in enumerate(checks):
         x = 20 + (i % 4) * 310
-        y = 80 + (i // 4) * 200
-        visuals.append(card(f"check_{i + 1}", (x, y, 300, 180), measure(measure_name), title, filters=filters, z=i + 1))
+        y = 70 + (i // 4) * 210
+        visuals.append(card(f"check_{i + 1}", (x, y, 300, 200), measure(measure_name), title, filters=filters, z=i + 1))
     return {"name": "model_check", "displayName": "Model check", "visuals": visuals, "hidden": True}
 
 
 def main() -> None:
     write_pages(REPORT_DIR, [executive_overview_page(), location_time_page(), risk_factors_page(),
-                             model_check_page()])
+                             lga_rates_page(), strategy_target_page(), model_check_page()])
     set_report_filters(REPORT_DIR, [COMPLETE_YEARS_FILTER])
     # Relative path: some Windows consoles cannot print non-ASCII folder names.
     print(f"Report pages written to powerbi/{REPORT_DIR.name}")

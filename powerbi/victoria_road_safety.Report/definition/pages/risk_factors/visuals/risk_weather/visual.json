@@ -28,27 +28,7 @@
               },
               "queryRef": "dim_weather.weather_category",
               "nativeQueryRef": "weather_category",
-              "active": true,
               "displayName": "Weather"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Crashes"
-                }
-              },
-              "queryRef": "_Measures.Total Crashes",
-              "nativeQueryRef": "Total Crashes",
-              "displayName": "Crashes"
             }
           ]
         },
@@ -70,6 +50,25 @@
               "displayName": "KSI share"
             }
           ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Crashes"
+                }
+              },
+              "queryRef": "_Measures.Total Crashes",
+              "nativeQueryRef": "Total Crashes",
+              "displayName": "Crashes"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -87,7 +86,8 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

@@ -9,6 +9,16 @@ Victoria, on the [DTP open data portal](https://opendata.transport.vic.gov.au/da
 - Coverage: crashes from 2012-01-01. The data is updated monthly, with about a seven-month lag, and the most recent months are incomplete.
 - Content: police-reported crashes in which someone was injured. Non-injury crashes are almost absent (4 rows).
 
+## Reference data
+
+`data/reference/32180DS0004_2001-25.xlsx`: ABS *Regional population, 2024-25*, data cube 3218.0 Table 1,
+estimated resident population by Local Government Area at 30 June, 2001 to 2025, on 2025 LGA boundaries.
+
+- Source: [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/population/regional-population/latest-release), released 31 March 2026.
+- Licence: [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/). © Commonwealth of Australia.
+- Committed to the repository (300 KB) so the Power BI report can be refreshed without another download.
+- Used by the Power BI `lga_population` table, which is shaped in Power Query. All 79 Victorian LGAs match the crash data's names once `Greater ` and ` (Vic.)` are removed and Moreland is mapped to Merri-bek.
+
 ## Download
 
 ```bash

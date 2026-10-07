@@ -3,9 +3,9 @@
   "name": "check_1",
   "position": {
     "x": 20,
-    "y": 80,
+    "y": 70,
     "z": 1,
-    "height": 180,
+    "height": 200,
     "width": 300,
     "tabOrder": 1
   },

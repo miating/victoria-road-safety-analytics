@@ -28,7 +28,6 @@
               },
               "queryRef": "dim_speed_zone.speed_band",
               "nativeQueryRef": "speed_band",
-              "active": true,
               "displayName": "Speed zone"
             }
           ]
@@ -52,25 +51,6 @@
             }
           ]
         },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Crashes"
-                }
-              },
-              "queryRef": "_Measures.Total Crashes",
-              "nativeQueryRef": "Total Crashes",
-              "displayName": "Crashes"
-            }
-          ]
-        },
         "Y": {
           "projections": [
             {
@@ -87,6 +67,25 @@
               "queryRef": "_Measures.KSI Share",
               "nativeQueryRef": "KSI Share",
               "displayName": "KSI share"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Crashes"
+                }
+              },
+              "queryRef": "_Measures.Total Crashes",
+              "nativeQueryRef": "Total Crashes",
+              "displayName": "Crashes"
             }
           ]
         }
@@ -106,7 +105,8 @@
             },
             "direction": "Ascending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

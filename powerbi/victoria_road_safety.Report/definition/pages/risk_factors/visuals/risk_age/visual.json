@@ -28,27 +28,7 @@
               },
               "queryRef": "dim_person_demographic.age_group",
               "nativeQueryRef": "age_group",
-              "active": true,
               "displayName": "Age group"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "People Involved"
-                }
-              },
-              "queryRef": "_Measures.People Involved",
-              "nativeQueryRef": "People Involved",
-              "displayName": "People involved"
             }
           ]
         },
@@ -70,6 +50,25 @@
               "displayName": "Killed or seriously injured"
             }
           ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "People Involved"
+                }
+              },
+              "queryRef": "_Measures.People Involved",
+              "nativeQueryRef": "People Involved",
+              "displayName": "People involved"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -87,7 +86,8 @@
             },
             "direction": "Ascending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {

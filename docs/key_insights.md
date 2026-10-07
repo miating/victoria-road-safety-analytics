@@ -66,6 +66,11 @@ years 2012-2024. KSI means a crash in which someone was killed or seriously inju
 - **Hotspots:**
   - The location with the most crashes in 2020-2024 was Cemetery Road / Princes Street in Melbourne (26 crashes).
   - Three of the top 20 locations are on Clyde-Five Ways Road in Casey. Clyde-Five Ways Road / Ballarto Road had 22 crashes, 12 of them KSI, with a median of 27 days between crashes.
+- **Rates per resident (2012-2024, ABS population):**
+  - Victoria had 85.1 KSI crashes per 100,000 residents per year.
+  - Casey, first by count, is 12% below that rate (75.1). Melbourne is 86% above it (158.2), because the CBD draws far more traffic than its residents generate.
+  - The highest rates are rural: Murrindindi 313.5, Towong 272.0, Strathbogie 257.2, Mansfield 243.8. Tourist routes and through traffic make these overstate the risk to residents.
+  - So counts point to where the most crashes happen and rates to where they are most out of proportion; a road safety team needs both.
 - **Crashes cluster:**
   - The 1% of locations with the most crashes account for 11.3% of all crashes.
   - The top 10% account for 34.5%.
@@ -107,8 +112,15 @@ years 2012-2024. KSI means a crash in which someone was killed or seriously inju
   - The 70+ group also has the most deaths of any age group (627). This is consistent with older people being more physically vulnerable in a crash.
   - Young people aged 18-25 are 19.4% of everyone involved.
 
+## 6. Performance: off track for the 2030 goal
+
+- The Victorian Road Safety Strategy 2021-2030 aims to halve road deaths by 2030. It cites 266 deaths in 2019, which matches this data. It does not name a formal baseline year, so 2019 is an assumption here.
+- A straight-line path from 266 in 2019 to 133 in 2030 puts 2024 at 206 deaths. The actual figure was 284, 38% above the path.
+- Deaths were below the path in 2020 and 2021 (211 and 234), during COVID-19 travel restrictions, and above it from 2022.
+- To reach 133 in 2030 from 284 in 2024, deaths would need to fall by 11.9% every year.
+
 ## Possible next steps
 
-- Add exposure data (traffic volumes, population by LGA) so locations and groups can be compared by rate, not count.
+- Add traffic volume data. Population by LGA is now used for per-resident rates, but a true risk rate needs distance travelled.
 - Check the 2017-2018 recording change with DTP before using total-crash trends for those years.
 - Investigate the Clyde-Five Ways Road corridor in Casey, which appears three times in the top 20 hotspots.

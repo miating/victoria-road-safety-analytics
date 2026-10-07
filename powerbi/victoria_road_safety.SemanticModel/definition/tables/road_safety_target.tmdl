@@ -1,0 +1,24 @@
+/// Year axis for actual deaths against the Victorian Road Safety Strategy 2021-2030 goal
+/// (halve road deaths by 2030). Not related to dim_date so the axis can run past the data to 2030.
+table road_safety_target
+	lineageTag: 11d04507-50f1-440c-b4d3-539322095e11
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 5f095349-d30e-4a27-9163-62382702d966
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition road_safety_target = m
+		mode: import
+		source =
+				let
+				    // One row per year: complete crash years plus the strategy period to 2030
+				    Years = Table.FromList({2012..2030}, Splitter.SplitByNothing(), type table [year = Int64.Type])
+				in
+				    Years
+
+	annotation PBI_ResultType = Table

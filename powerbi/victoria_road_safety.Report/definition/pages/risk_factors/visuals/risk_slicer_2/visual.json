@@ -28,7 +28,6 @@
               },
               "queryRef": "dim_location.lga_name",
               "nativeQueryRef": "lga_name",
-              "active": true,
               "displayName": "LGA"
             }
           ]
