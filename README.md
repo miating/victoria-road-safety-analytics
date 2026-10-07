@@ -20,7 +20,8 @@ I built this to practise the full path from raw files to a dashboard someone cou
 - **Data quality:** 30 documented rules. Problems are fixed, flagged or rejected, never silently deleted, and every run writes a [data quality report](docs/data_quality_report.md).
 - **Analysis:** 18 SQL queries, each answering one question, plus reporting views and a materialized view.
 - **Performance:** indexes chosen by measuring `EXPLAIN ANALYZE` before and after, including one index I measured and then rejected.
-- **Dashboard:** three Power BI pages, saved as a Power BI Project so the model and pages are text files in Git.
+- **Dashboard:** five Power BI pages, saved as a Power BI Project so the model and pages are text files in Git. Two of them report performance: crash rates per resident (ABS population shaped in Power Query) and road deaths against the state's 2030 goal.
+- **Paginated report:** a printable monthly LGA performance report in RDL, the SSRS / Power BI Report Builder format, with parameters and conditional formatting.
 - **Tests:** 100 pytest tests, covering unit logic, database constraints and reconciliation of the results against the source.
 
 ## Business Problem
@@ -62,12 +63,13 @@ published by the Department of Transport and Planning (DTP) under CC BY 4.0.
 
 - Nine related CSV files describe crashes, people, vehicles, locations, weather, road surface and crash events. A tenth file is DTP's own one-row-per-crash summary, which I used to check my results.
 - The snapshot I used covers crash dates from 2012-01-01 to 2026-01-31 (200,754 crashes). The exact download is recorded in [data/raw/manifest.json](data/raw/manifest.json).
+- **Reference data:** ABS estimated resident population by LGA, 2001-2025 ([Regional population 2024-25](https://www.abs.gov.au/statistics/people/population/regional-population/latest-release), CC BY 4.0), in [data/reference/](data/reference/). It turns crash counts into rates per resident.
 
 Three limitations shape every result:
 
 - **Injury crashes only.** There are 4 non-injury crashes in 200,754 records.
 - **Incomplete recent months.** The data is published with a lag, so trends use the complete years 2012-2024.
-- **No exposure data.** There are no traffic volumes, so counts are not risk rates, and every association is just that, not a cause.
+- **No traffic exposure data.** There are no traffic volumes, so counts are not risk rates, and every association is just that, not a cause. Population gives a per-resident rate, but crashes happen where people drive, not only where they live.
 
 ## Tech Stack
 
@@ -77,7 +79,8 @@ Three limitations shape every result:
 | Python 3.13 (psycopg, requests, pandas, python-dotenv) | Download, bulk load with `COPY`, validation runner, reports, profiling |
 | SQL | Cleaning, dimensional modelling, analysis, performance tuning |
 | pytest | Unit, constraint and data tests |
-| Power BI Desktop (PBIP: TMDL + PBIR) | Dashboard, DAX measures |
+| Power BI Desktop (PBIP: TMDL + PBIR) | Dashboard, DAX measures, Power Query (M) |
+| Power BI Report Builder (RDL) + psqlODBC | Paginated, printable report with parameters |
 | Jupyter + matplotlib | Initial data profiling |
 | Git / GitHub | Version control, one commit per phase |
 
@@ -168,24 +171,51 @@ Each SQL feature was used where the question needed it:
 
 ![Location and Time page](powerbi/screenshots/02_location_and_time.png)
 
-Three pages:
+Five pages:
 
 - **Executive Overview:** KPIs, trend, severity, map, day x hour heatmap
 - **Location & Time:** map, LGA ranking, top locations, hours, weekends, seasons
 - **Risk Factors:** weather, surface by speed, light, vehicles, road users, age
+- **LGA Rates:** KSI crashes per 100,000 residents by LGA, against the Victorian rate
+- **Strategy Target:** road deaths each year against a path to the [Victorian Road Safety Strategy](https://www.tac.vic.gov.au/road-safety/victorian-road-safety-strategy/victorian-road-safety-strategy-2021-2030) goal of halving deaths by 2030
 
 How it is built:
 
 - **Import mode** on the star schema, with 21 one-to-many relationships.
-- **19 DAX measures**, using `TREATAS` to carry filters between fact tables instead of ambiguous fact-to-fact relationships.
+- **32 DAX measures**, using `TREATAS` to carry filters between fact tables, and from the date and location dimensions to the population table, instead of ambiguous relationships.
+- **Power Query (M)** shapes the ABS Excel data cube: skips the title rows, renames 27 columns by position, keeps Victorian LGA codes, unpivots 25 year columns and conforms names (`Greater Geelong` → `GEELONG`). The file folder is a Power Query parameter.
+- A **name change** is handled explicitly: Moreland became Merri-bek in 2022 and appears under both names, so `lga_name_current` merges them before matching population.
 - A **year-over-year measure** that refuses to compare incomplete years.
 - Saved as a **Power BI Project**:
   - the model is TMDL
   - the pages are PBIR JSON, generated by [powerbi/tools/build_report.py](powerbi/tools/build_report.py)
   - so `git diff` shows every measure and layout change
-- A hidden **Model check** page compares eight KPIs with values calculated in SQL. All eight match.
+- A hidden **Model check** page compares twelve KPIs with values calculated in SQL or Python. All twelve match.
+
+![LGA Rates page](powerbi/screenshots/04_lga_rates.png)
+
+![Strategy Target page](powerbi/screenshots/05_strategy_target.png)
 
 See [powerbi/README.md](powerbi/README.md) and [docs/dashboard_design.md](docs/dashboard_design.md).
+
+## Paginated Report
+
+A dashboard is for exploring; a monthly report to a manager or funder is usually a fixed, printable
+document. [reports/paginated/lga_monthly_performance.rdl](reports/paginated/lga_monthly_performance.rdl)
+is that document for one LGA and year:
+
+- **Year summary:** crashes, KSI crashes and deaths against the previous year, with the Victorian KSI share for context.
+- **Month by month:** each month against the same month a year earlier, with a year total. Rises are red, falls green.
+- **Top locations:** the five locations with the most crashes that year.
+- **Parameters:** LGA and year drop-downs filled from the database. Only complete years with a complete previous year can be chosen.
+
+RDL is the format of SQL Server Reporting Services (SSRS) and Power BI Report Builder. The report connects
+to PostgreSQL through ODBC. Its SQL is in [reports/paginated/queries/](reports/paginated/queries/) and is
+embedded by [build_rdl.py](reports/paginated/build_rdl.py), so the queries can be tested on their own.
+Setup is in [reports/paginated/README.md](reports/paginated/README.md), and a sample export is
+[sample_casey_2024.pdf](reports/paginated/sample_casey_2024.pdf).
+
+![Paginated report, CASEY 2024](reports/paginated/sample_casey_2024.png)
 
 ## SQL Examples
 
@@ -262,6 +292,12 @@ The full write-up is in [docs/key_insights.md](docs/key_insights.md).
   - Motorcyclists were 6.1% of people involved but 16.5% of deaths.
   - Pedestrians died at 28.5 per 1,000 involved, against 5.7 for drivers.
 - **Heavy vehicles were involved in fatal crashes at almost five times the rate of light passenger vehicles** (55.3 vs 11.7 per 1,000), while only 8.0% of their own occupants were killed or seriously injured.
+- **Counts and rates rank LGAs differently.**
+  - Casey has the most crashes, but 75.1 KSI crashes per 100,000 residents per year, 12% below the Victorian rate of 85.1 (2012-2024).
+  - The highest rates are rural: Murrindindi 313.5, Towong 272.0, Strathbogie 257.2. These LGAs carry tourist and through traffic, so a per-resident rate overstates local risk.
+- **Road deaths are off track for the 2030 goal.**
+  - The strategy aims to halve road deaths by 2030 and cites 266 deaths in 2019. A straight-line path from 2019 puts 2024 at 206; the actual figure was 284, 38% above the path.
+  - Reaching 133 deaths in 2030 would now need a fall of 11.9% every year from 2024.
 
 ## How to Run
 
@@ -301,8 +337,10 @@ python -m src.analysis.run_analysis   # regenerates docs/analysis_results.md
 python -m src.performance.benchmark   # regenerates docs/performance_results.md
 ```
 
-For the dashboard, open `powerbi/victoria_road_safety.pbip` in Power BI Desktop and click
-**Refresh**. See [powerbi/README.md](powerbi/README.md).
+For the dashboard, open `powerbi/victoria_road_safety.pbip` in Power BI Desktop, set the
+`ReferenceDataFolder` parameter to your `data/reference` folder, and click **Refresh**.
+See [powerbi/README.md](powerbi/README.md). For the paginated report, see
+[reports/paginated/README.md](reports/paginated/README.md).
 
 To use a hosted PostgreSQL such as Neon or Supabase, change the settings in `.env` and set
 `DB_SSLMODE=require`. Nothing else changes.
@@ -310,13 +348,14 @@ To use a hosted PostgreSQL such as Neon or Supabase, change the settings in `.en
 ## Repository Structure
 
 ```
-├── data/                  raw files (not committed) and the download manifest
+├── data/                  raw files (not committed), the download manifest and ABS reference data
 ├── docs/                  design, data dictionary, data quality, analysis, performance
 ├── notebooks/             initial profiling notebook
 ├── powerbi/
 │   ├── victoria_road_safety.pbip, .SemanticModel/, .Report/   Power BI Project (text files)
 │   ├── tools/             generates the report pages
 │   └── screenshots/
+├── reports/paginated/     RDL paginated report, its SQL and the script that builds it
 ├── sql/
 │   ├── schema/            DDL for staging, core, analytics, audit
 │   ├── indexes/           measured secondary indexes
@@ -338,8 +377,8 @@ To use a hosted PostgreSQL such as Neon or Supabase, change the settings in `.en
 
 ## Future Improvements
 
-- **Exposure data.**
-  - Join traffic volumes or LGA population, so locations and groups can be compared by rate instead of count. This is the biggest gap in the analysis.
+- **Traffic exposure data.**
+  - LGA population is now joined in Power BI, which gives a rate per resident. Traffic volumes would give a true risk rate per kilometre travelled, and remain the biggest gap in the analysis.
 - **Confirm the 2017-2018 recording change** with DTP before using total-crash trends for those years.
 - **Spatial analysis.**
   - Use PostGIS to cluster crashes along road segments, rather than treating each node separately.
@@ -347,4 +386,4 @@ To use a hosted PostgreSQL such as Neon or Supabase, change the settings in `.en
 - **Incremental loads.** The pipeline reloads everything each time. At this size that takes a few minutes, but a larger dataset would need incremental loading.
 - **Automation:** a scheduled monthly run and CI that runs the unit tests on every push.
 - **Migrations:** a tool such as Flyway or Alembic instead of numbered DDL files with `IF NOT EXISTS`.
-- **Hosting:** deploy the database to Neon or Supabase and publish the report to the Power BI service.
+- **Hosting:** deploy the database to Neon or Supabase, and publish the dashboard and the paginated report to the Power BI service.
