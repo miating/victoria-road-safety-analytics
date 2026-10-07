@@ -293,8 +293,8 @@ The full write-up is in [docs/key_insights.md](docs/key_insights.md).
   - Pedestrians died at 28.5 per 1,000 involved, against 5.7 for drivers.
 - **Heavy vehicles were involved in fatal crashes at almost five times the rate of light passenger vehicles** (55.3 vs 11.7 per 1,000), while only 8.0% of their own occupants were killed or seriously injured.
 - **Counts and rates rank LGAs differently.**
-  - Casey has the most crashes, but 75.1 KSI crashes per 100,000 residents per year, 12% below the Victorian rate of 85.1 (2012-2024).
-  - The highest rates are rural: Murrindindi 313.5, Towong 272.0, Strathbogie 257.2. These LGAs carry tourist and through traffic, so a per-resident rate overstates local risk.
+  - In 2020-2024 Casey had the most crashes (3,718), but 70.0 KSI crashes per 100,000 residents per year, 8% below the Victorian rate of 76.2.
+  - Over 2012-2024 the highest rates are rural: Murrindindi 313.5, Towong 272.0, Strathbogie 257.2. These LGAs carry tourist and through traffic, so a per-resident rate overstates local risk.
 - **Road deaths are off track for the 2030 goal.**
   - The strategy aims to halve road deaths by 2030 and cites 266 deaths in 2019. A straight-line path from 2019 puts 2024 at 206; the actual figure was 284, 38% above the path.
   - Reaching 133 deaths in 2030 would now need a fall of 11.9% every year from 2024.

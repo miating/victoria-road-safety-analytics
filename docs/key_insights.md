@@ -68,7 +68,7 @@ years 2012-2024. KSI means a crash in which someone was killed or seriously inju
   - Three of the top 20 locations are on Clyde-Five Ways Road in Casey. Clyde-Five Ways Road / Ballarto Road had 22 crashes, 12 of them KSI, with a median of 27 days between crashes.
 - **Rates per resident (2012-2024, ABS population):**
   - Victoria had 85.1 KSI crashes per 100,000 residents per year.
-  - Casey, first by count, is 12% below that rate (75.1). Melbourne is 86% above it (158.2), because the CBD draws far more traffic than its residents generate.
+  - Casey, which had the most crashes in 2020-2024, is 12% below that rate (75.1); for 2020-2024 alone it is 70.0 against a state rate of 76.2, 8% below. Melbourne is 86% above the 2012-2024 rate (158.2), because the CBD draws far more traffic than its residents generate.
   - The highest rates are rural: Murrindindi 313.5, Towong 272.0, Strathbogie 257.2, Mansfield 243.8. Tourist routes and through traffic make these overstate the risk to residents.
   - So counts point to where the most crashes happen and rates to where they are most out of proportion; a road safety team needs both.
 - **Crashes cluster:**
