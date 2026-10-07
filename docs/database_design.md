@@ -100,7 +100,7 @@ erDiagram
     }
 ```
 
-The diagram shows the main columns only. The full column list is defined in Phase 4.
+The diagram shows the main columns only. The full column list is in `sql/schema/05_core.sql`.
 
 | Table | Grain | Primary key | Approx. rows |
 |---|---|---|---|

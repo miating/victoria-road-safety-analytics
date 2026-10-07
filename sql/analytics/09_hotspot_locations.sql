@@ -19,5 +19,6 @@ JOIN analytics.dim_severity s USING (severity_key)
 WHERE d.year BETWEEN 2020 AND 2024
   AND l.location_key <> -1
 GROUP BY l.location_key, l.location_label, l.lga_name, l.node_type_desc, l.latitude, l.longitude
-ORDER BY crashes DESC, ksi_crashes DESC
+-- node_id breaks ties so the order is the same on every run.
+ORDER BY crashes DESC, ksi_crashes DESC, l.node_id
 LIMIT 20;

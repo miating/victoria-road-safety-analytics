@@ -11,7 +11,7 @@ WITH top_locations AS (
     WHERE d.year BETWEEN 2020 AND 2024
       AND f.location_key <> -1
     GROUP BY f.location_key
-    ORDER BY count(*) DESC
+    ORDER BY count(*) DESC, f.location_key
     LIMIT 10
 ),
 crash_sequence AS (
@@ -33,4 +33,4 @@ SELECT l.location_label,
 FROM crash_sequence c
 JOIN analytics.dim_location l USING (location_key)
 GROUP BY l.location_key, l.location_label, l.lga_name
-ORDER BY median_days_between;
+ORDER BY median_days_between, l.location_label;  -- label breaks ties so the order is stable

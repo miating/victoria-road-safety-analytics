@@ -104,7 +104,7 @@ the same way the pipeline already handles foreign keys.
 
 ## Optimisations found while building the pipeline
 
-These were real problems hit during Phase 5. They are recorded here because they are as much
+These were real problems hit while building the pipeline. They are recorded here because they are as much
 query optimisation as the index work above.
 
 | Problem | Before | After | Fix |

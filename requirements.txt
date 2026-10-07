@@ -1,18 +1,16 @@
-# Data processing
-pandas>=2.2,<3
-numpy>=2.0,<3
-
-# Database access (SQLAlchemy engine + psycopg 3 driver)
-SQLAlchemy>=2.0,<3
+# Database access: psycopg 3 is used directly for COPY bulk loads and explicit transactions
 psycopg[binary]>=3.2,<4
 
-# Configuration
+# Configuration (.env)
 python-dotenv>=1.0,<2
 
-# Downloading source data
+# Downloading source data from the CKAN API
 requests>=2.32,<3
 
-# Exploratory analysis (notebook kernel + charts)
+# Profiling (src/extract/inspect_raw.py, notebooks)
+pandas>=2.2,<3
+
+# Notebook kernel and charts
 matplotlib>=3.9,<4
 ipykernel>=6.29,<8
 
