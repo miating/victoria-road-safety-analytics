@@ -35,3 +35,6 @@ data/processed/*
 .idea/
 Thumbs.db
 .DS_Store
+
+# Private career notes (resume bullets, interview preparation)
+career/

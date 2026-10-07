@@ -177,7 +177,7 @@ Three pages:
 How it is built:
 
 - **Import mode** on the star schema, with 21 one-to-many relationships.
-- **18 DAX measures**, using `TREATAS` to carry filters between fact tables instead of ambiguous fact-to-fact relationships.
+- **19 DAX measures**, using `TREATAS` to carry filters between fact tables instead of ambiguous fact-to-fact relationships.
 - A **year-over-year measure** that refuses to compare incomplete years.
 - Saved as a **Power BI Project**:
   - the model is TMDL
