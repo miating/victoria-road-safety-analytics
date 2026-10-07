@@ -17,13 +17,20 @@ clicks, filters or searches. Those are the five scenarios in `sql/performance/`.
 
 ## Results
 
-| Scenario | Before | After | Speed-up | What changed in the plan |
+The benchmark was run twice. Both runs are shown because sub-millisecond timings on this laptop
+vary a lot between runs. The size of each improvement is consistent; the exact multiplier is not.
+`performance_results.md` always holds the latest run.
+
+| Scenario | Before (run 1 / run 2) | After (run 1 / run 2) | Speed-up | What changed in the plan |
 |---|---|---|---|---|
-| 01 Crash history of one location | 53.4 ms | 0.34 ms | ~150x | Sequential scan of 200,754 facts became an index scan of ~75 rows |
-| 02 One LGA, one year, by month | 66.4 ms | 24.3 ms | 2.7x | Fact scan limited to 2024 through a date-first composite index |
-| 03 Latest 50 fatal crashes | 64.4 ms | 0.29 ms | ~220x | Scan + sort replaced by reading 50 entries of a partial index |
-| 04 Road name search ("clyde...") | 127.1 ms | 1.84 ms | ~70x | Expression index on `lower(road_name)` plus the location fact index |
-| 05 KSI count (counter-example) | 67.5 ms | 67.8 ms | none | Planner ignores the index; plan and buffers unchanged |
+| 01 Crash history of one location | 53.4 / 61.4 ms | 0.34 / 1.35 ms | 45-150x | Sequential scan of 200,754 facts became an index scan of ~75 rows |
+| 02 One LGA, one year, by month | 66.4 / 64.2 ms | 24.3 / 25.8 ms | ~2.5x | Fact scan limited to 2024 through a date-first composite index |
+| 03 Latest 50 fatal crashes | 64.4 / 61.0 ms | 0.29 / 0.12 ms | 220-500x | Scan + sort replaced by reading 50 entries of a partial index |
+| 04 Road name search ("clyde...") | 127.1 / 131.7 ms | 1.84 / 4.23 ms | 30-70x | Expression index on `lower(road_name)` plus the location fact index |
+| 05 KSI count (counter-example) | 67.5 / 75.3 ms | 67.8 / 73.9 ms | none | Planner ignores the index; plan and buffers unchanged |
+
+The "before" times are stable at 50-130 ms because a sequential scan always does the same
+work. The "after" times are so small that timer resolution and background activity dominate.
 
 ## What each index does and why it helps
 
@@ -40,9 +47,9 @@ filter on location plus date range can then be answered from one contiguous inde
 
 **This index was not in my original plan; the measurement changed my mind.**
 
-- I expected the location-first index above to speed up "Casey, 2024". It did not: 66.4 ms became 54.3 ms, and the plan still showed a sequential scan of `fact_crash`.
+- I expected the location-first index above to speed up "Casey, 2024". It did not: 66.4 ms became 54.3 ms (run 2: 64.2 to 55.5 ms), and the plan still showed a sequential scan of `fact_crash`.
 - Casey has 6,077 locations. Probing the index 6,077 times was estimated to cost more than reading the table once, so the planner ignored it.
-- A **date-first** composite lets PostgreSQL read only the 2024 range (about 8% of the table) and then keep the Casey rows. That gave 24.3 ms.
+- A **date-first** composite lets PostgreSQL read only the 2024 range (about 8% of the table) and then keep the Casey rows. That gave 24.3 ms (run 2: 25.8 ms).
 - **Lesson:** the leading column of a composite index should be the condition that narrows the data most for the queries you actually run.
 - Location drill-downs and date-range filters are both real patterns here, so both indexes are kept. That decision is weighed against its write cost below.
 
@@ -55,9 +62,9 @@ matters in combination: it replaces the scan of 144,096 locations with a lookup 
 ### `ix_crash_fatal_recent`: partial index on core.crash (crash_date DESC, crash_time DESC) WHERE severity_code = 1
 
 - **Without an index:** PostgreSQL reads all 200,754 crashes, keeps the 1.7% that are fatal and sorts them to find the latest 50.
-- **A full index on the date:** the time drops to 1.02 ms. But it indexes all 200,754 rows (5,976 KB) when only 3,371 are ever needed.
+- **A full index on the date:** the time drops to 1.02 ms (run 2: 0.83 ms). But it indexes all 200,754 rows (5,976 KB) when only 3,371 are ever needed.
 - **The partial index:** it stores only fatal crashes, already in the required order. The query reads 50 entries and stops.
-  - Time: 0.29 ms
+  - Time: 0.29 ms (run 2: 0.12 ms)
   - Size: **120 KB, about 50 times smaller than the full index**
 - **Trade-off:** it only helps queries whose `WHERE` clause includes `severity_code = 1`.
 
@@ -67,7 +74,7 @@ matters in combination: it replaces the scan of 144,096 locations with a lookup 
 - A plain index on `road_name` was not used at all (127 ms both ways): the index stores `road_name`, but the query asks about `lower(road_name)`.
 - The expression index stores the lower-cased value.
 - `text_pattern_ops` is needed because the database collation is not `C`. A default B-tree in a locale collation cannot be used for `LIKE 'prefix%'`.
-- The index alone brought the time to 83.6 ms. Combined with the location fact index, which is needed to count each matching location's crashes, it brought the time to **1.84 ms**. Indexes often only pay off together.
+- The index alone brought the time to 83.6 ms (run 2: 76.2 ms). Combined with the location fact index, which is needed to count each matching location's crashes, it brought the time to **1.84 ms** (run 2: 4.23 ms). Indexes often only pay off together.
 - An expression index needs `ANALYZE` to have statistics on the expression. The pipeline therefore analyses `dim_location` after every load.
 
 ### Not indexed: `fact_crash.severity_key` (scenario 05)
@@ -85,13 +92,13 @@ matters in combination: it replaces the scan of 144,096 locations with a lookup 
 | Cost | Measured here |
 |---|---|
 | Storage | 11.3 MB (11,608 KB) for the five indexes. The two fact_crash indexes are 4.4 MB each, together 45% of the 19.8 MB table |
-| Slower writes | Reloading fact_crash (200,754 rows, without foreign keys) took 4.5 s with no secondary indexes and 6.5 s with both, about 44% slower. Every insert must also update each index |
+| Slower writes | Reloading fact_crash (200,754 rows, without foreign keys) took 4.5 s with no secondary indexes and 6.5 s with both in run 1 (44% slower), and 5.2 s vs 6.0 s in run 2 (15% slower). Disk activity makes this vary, but both runs show the indexes add a noticeable cost to every load. Every insert must also update each index |
 | Maintenance | Indexes must be kept up to date by `VACUUM` and need fresh statistics from `ANALYZE`. They can bloat over time, and `REINDEX` may then be needed |
 | Planner risk | An index is only useful if the planner chooses it. Two of the indexes tested here (plain `road_name`, `severity_key`) were never used |
 
 For this project the trade is worth it. The data is reloaded in a batch a few times a month,
-while dashboards query it constantly, so a few extra seconds per load buy queries that are 50
-to 200 times faster. In a write-heavy transactional system the balance would be different.
+while dashboards query it constantly, so up to two extra seconds per load buy selective queries that are
+tens to hundreds of times faster. In a write-heavy transactional system the balance would be different.
 If load time ever mattered, the indexes could be dropped before the load and rebuilt afterwards,
 the same way the pipeline already handles foreign keys.
 

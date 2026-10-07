@@ -15,8 +15,8 @@ Query: [`sql/performance/01_location_crash_history.sql`](../sql/performance/01_l
 
 | Variant | Median execution (ms) | Speed-up | Buffers read | Index size (KB) | Plan steps |
 |---|---|---|---|---|---|
-| No index | 53.41 | 1.0x | 3,007 | 0 | Seq Scan on fact_crash; Index Scan using dim_location_node_id_key; Index Scan using dim_severity_pkey; Index Scan using dim_date_pkey; Index Scan using dim_time_pkey |
-| B-tree (location_key, date_key) | 0.34 | 157.1x | 607 | 4,424 | Index Scan using dim_location_node_id_key; Bitmap Heap Scan on fact_crash; Bitmap Index Scan using ix_fact_crash_location_date; Index Scan using dim_date_pkey; Index Scan using dim_time_pkey; Index Scan using dim_severity_pkey |
+| No index | 61.41 | 1.0x | 3,007 | 0 | Seq Scan on fact_crash; Index Scan using dim_location_node_id_key; Index Scan using dim_time_pkey; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
+| B-tree (location_key, date_key) | 1.35 | 45.3x | 607 | 4,424 | Index Scan using dim_location_node_id_key; Bitmap Heap Scan on fact_crash; Bitmap Index Scan using ix_fact_crash_location_date; Index Scan using dim_date_pkey; Index Scan using dim_time_pkey; Index Scan using dim_severity_pkey |
 
 ## 02 lga month filter
 
@@ -30,10 +30,10 @@ Query: [`sql/performance/02_lga_month_filter.sql`](../sql/performance/02_lga_mon
 
 | Variant | Median execution (ms) | Speed-up | Buffers read | Index size (KB) | Plan steps |
 |---|---|---|---|---|---|
-| No index | 66.38 | 1.0x | 7,932 | 0 | Seq Scan on fact_crash; Seq Scan on dim_location; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
-| Index on lga_name only | 57.09 | 1.2x | 7,334 | 1,024 | Seq Scan on fact_crash; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_lga; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
-| lga_name + composite (date_key, location_key) | 24.30 | 2.7x | 5,187 | 5,448 | Bitmap Heap Scan on fact_crash; Bitmap Index Scan using ix_fact_crash_date_location; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_lga; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
-| lga_name + composite (location_key, date_key) | 54.25 | 1.2x | 7,340 | 5,448 | Seq Scan on fact_crash; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_lga; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
+| No index | 64.23 | 1.0x | 7,932 | 0 | Seq Scan on fact_crash; Seq Scan on dim_location; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
+| Index on lga_name only | 55.83 | 1.2x | 7,342 | 1,024 | Seq Scan on fact_crash; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_lga; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
+| lga_name + composite (date_key, location_key) | 25.81 | 2.5x | 5,187 | 5,448 | Bitmap Heap Scan on fact_crash; Bitmap Index Scan using ix_fact_crash_date_location; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_lga; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
+| lga_name + composite (location_key, date_key) | 55.52 | 1.2x | 7,340 | 5,448 | Seq Scan on fact_crash; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_lga; Index Scan using dim_date_pkey; Index Scan using dim_severity_pkey |
 
 ## 03 recent fatal crashes
 
@@ -47,9 +47,9 @@ Query: [`sql/performance/03_recent_fatal_crashes.sql`](../sql/performance/03_rec
 
 | Variant | Median execution (ms) | Speed-up | Buffers read | Index size (KB) | Plan steps |
 |---|---|---|---|---|---|
-| No index | 64.42 | 1.0x | 3,823 | 0 | Seq Scan on crash; Index Scan using node_pkey |
-| Full index on (crash_date, crash_time) | 1.02 | 63.1x | 1,354 | 5,976 | Index Scan using tmp_crash_date_full; Index Scan using node_pkey |
-| Partial index WHERE severity_code = 1 | 0.29 | 220.6x | 202 | 120 | Index Scan using ix_crash_fatal_recent; Index Scan using node_pkey |
+| No index | 61.04 | 1.0x | 3,823 | 0 | Seq Scan on crash; Index Scan using node_pkey |
+| Full index on (crash_date, crash_time) | 0.83 | 73.3x | 1,354 | 5,976 | Index Scan using tmp_crash_date_full; Index Scan using node_pkey |
+| Partial index WHERE severity_code = 1 | 0.12 | 500.3x | 202 | 120 | Index Scan using ix_crash_fatal_recent; Index Scan using node_pkey |
 
 ## 04 road name search
 
@@ -63,10 +63,10 @@ Query: [`sql/performance/04_road_name_search.sql`](../sql/performance/04_road_na
 
 | Variant | Median execution (ms) | Speed-up | Buffers read | Index size (KB) | Plan steps |
 |---|---|---|---|---|---|
-| No index | 127.06 | 1.0x | 5,584 | 0 | Seq Scan on fact_crash; Seq Scan on dim_location |
-| Plain index on road_name | 126.24 | 1.0x | 5,584 | 1,616 | Seq Scan on fact_crash; Seq Scan on dim_location |
-| Expression index lower(road_name) | 83.55 | 1.5x | 2,678 | 1,616 | Seq Scan on fact_crash; Bitmap Heap Scan on dim_location; Bitmap Index Scan using ix_dim_location_road_name_pattern |
-| Expression index + fact (location_key, date_key) | 1.84 | 69.1x | 1,295 | 6,040 | Index Scan using ix_dim_location_road_name_pattern; Bitmap Heap Scan on fact_crash; Bitmap Index Scan using ix_fact_crash_location_date |
+| No index | 131.71 | 1.0x | 5,584 | 0 | Seq Scan on fact_crash; Seq Scan on dim_location |
+| Plain index on road_name | 125.18 | 1.1x | 5,584 | 1,616 | Seq Scan on fact_crash; Seq Scan on dim_location |
+| Expression index lower(road_name) | 76.24 | 1.7x | 2,682 | 1,616 | Seq Scan on fact_crash; Index Scan using ix_dim_location_road_name_pattern |
+| Expression index + fact (location_key, date_key) | 4.23 | 31.1x | 1,295 | 6,040 | Index Scan using ix_dim_location_road_name_pattern; Bitmap Heap Scan on fact_crash; Bitmap Index Scan using ix_fact_crash_location_date |
 
 ## 05 severity count no benefit
 
@@ -78,22 +78,45 @@ Query: [`sql/performance/05_severity_count_no_benefit.sql`](../sql/performance/0
 
 | Variant | Median execution (ms) | Speed-up | Buffers read | Index size (KB) | Plan steps |
 |---|---|---|---|---|---|
-| No index | 67.50 | 1.0x | 2,565 | 0 | Seq Scan on fact_crash; Seq Scan on dim_severity |
-| Index on severity_key | 67.83 | 1.0x | 2,565 | 1,376 | Seq Scan on fact_crash; Seq Scan on dim_severity |
+| No index | 75.34 | 1.0x | 2,565 | 0 | Seq Scan on fact_crash; Seq Scan on dim_severity |
+| Index on severity_key | 73.87 | 1.0x | 2,565 | 1,376 | Seq Scan on fact_crash; Seq Scan on dim_severity |
 
 ## Write cost: reloading fact_crash (200,754 rows)
 
 | Variant | Median load time (ms) |
 |---|---|
-| No secondary indexes | 4526 |
-| With both adopted fact_crash indexes | 6530 |
+| No secondary indexes | 5205 |
+| With both adopted fact_crash indexes | 6012 |
 
 ## Storage cost of the adopted indexes
 
 | Index | Table | Index size (KB) | Table size (KB) |
 |---|---|---|---|
-| ix_crash_fatal_recent | crash | 120 | 28,632 |
-| ix_dim_location_lga | dim_location | 1,024 | 24,296 |
-| ix_dim_location_road_name_pattern | dim_location | 1,616 | 24,296 |
-| ix_fact_crash_date_location | fact_crash | 4,424 | 19,832 |
-| ix_fact_crash_location_date | fact_crash | 4,424 | 19,832 |
+| ix_crash_fatal_recent | crash | 160 | 28,632 |
+| ix_dim_location_lga | dim_location | 1,224 | 24,296 |
+| ix_dim_location_road_name_pattern | dim_location | 2,112 | 24,296 |
+| ix_fact_crash_date_location | fact_crash | 6,328 | 19,832 |
+| ix_fact_crash_location_date | fact_crash | 6,000 | 19,832 |
+
+## Reporting views
+
+| View | Rows | Median execution (ms) |
+|---|---|---|
+| vw_crash_summary | 15 | 319 |
+| vw_crash_severity_trend | 169 | 131 |
+| vw_crashes_by_lga | 1,246 | 421 |
+| vw_crash_time_analysis | 2,435 | 127 |
+| vw_vehicle_crash_analysis | 399 | 312 |
+| vw_location_hotspots | 144,095 | 2903 |
+
+## View vs materialized view: location hotspots
+
+| Query | View (ms) | Materialized view (ms) |
+|---|---|---|
+| Top 20 locations statewide | 1,369.5 | 0.04 |
+| Top 10 locations in Casey | 1,847.8 | 0.03 |
+
+| Cost of the materialized view | Value |
+|---|---|
+| Refresh time (median of 3) | 4.8 s |
+| Storage including indexes | 32,952 KB |

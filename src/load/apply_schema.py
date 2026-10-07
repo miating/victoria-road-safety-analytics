@@ -1,5 +1,5 @@
-"""Create the database schemas, tables and indexes by running sql/schema/*.sql and then
-sql/indexes/*.sql in name order.
+"""Create the database schemas, tables, indexes and views by running sql/schema/*.sql,
+sql/indexes/*.sql and sql/views/*.sql in name order.
 
 All files run in one transaction, so a failure leaves the database unchanged.
 The DDL uses IF NOT EXISTS, so running it again is safe. Use --reset during
@@ -17,8 +17,9 @@ from pathlib import Path
 from src.utils.db import get_connection
 
 SQL_DIR = Path(__file__).resolve().parents[2] / "sql"
-# Tables first, then the secondary indexes that are justified in docs/query_optimisation.md.
-SQL_DIRS = [SQL_DIR / "schema", SQL_DIR / "indexes"]
+# Tables first, then the secondary indexes justified in docs/query_optimisation.md,
+# then the reporting views that depend on both.
+SQL_DIRS = [SQL_DIR / "schema", SQL_DIR / "indexes", SQL_DIR / "views"]
 SCHEMAS = ["analytics", "core", "staging", "audit"]
 
 logger = logging.getLogger(__name__)

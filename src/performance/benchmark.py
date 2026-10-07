@@ -166,6 +166,56 @@ def measure_write_cost(connection: psycopg.Connection) -> list[dict]:
     return results
 
 
+REPORTING_VIEWS = [
+    "vw_crash_summary", "vw_crash_severity_trend", "vw_crashes_by_lga",
+    "vw_crash_time_analysis", "vw_vehicle_crash_analysis", "vw_location_hotspots",
+]
+HOTSPOT_QUERIES = {
+    "Top 20 locations statewide":
+        "SELECT location_label, lga_name, crashes_recent FROM analytics.{} ORDER BY state_rank_recent LIMIT 20",
+    "Top 10 locations in Casey":
+        "SELECT location_label, crashes_recent FROM analytics.{} WHERE lga_name = 'CASEY' ORDER BY lga_rank_recent LIMIT 10",
+}
+
+
+def median_execution_ms(connection: psycopg.Connection, query: str) -> float:
+    # TIMING OFF: per-node timing adds large overhead on queries that process many rows.
+    runs = [
+        connection.execute(f"EXPLAIN (ANALYZE, TIMING OFF, FORMAT JSON) {query}").fetchone()[0][0]["Execution Time"]
+        for _ in range(MEASURED_RUNS + 1)
+    ]
+    return statistics.median(runs[1:])
+
+
+def views_section(connection: psycopg.Connection) -> list[str]:
+    lines = ["## Reporting views", "", "| View | Rows | Median execution (ms) |", "|---|---|---|"]
+    for view in REPORTING_VIEWS:
+        rows = connection.execute(f"SELECT count(*) FROM analytics.{view}").fetchone()[0]
+        lines.append(f"| {view} | {rows:,} | {median_execution_ms(connection, f'SELECT * FROM analytics.{view}'):.0f} |")
+
+    lines += ["", "## View vs materialized view: location hotspots", "",
+              "| Query | View (ms) | Materialized view (ms) |", "|---|---|---|"]
+    for label, query in HOTSPOT_QUERIES.items():
+        view_ms = median_execution_ms(connection, query.format("vw_location_hotspots"))
+        mv_ms = median_execution_ms(connection, query.format("mv_location_hotspots"))
+        lines.append(f"| {label} | {view_ms:,.1f} | {mv_ms:.2f} |")
+        logger.info("hotspots | %-28s view %8.1f ms  mv %6.2f ms", label, view_ms, mv_ms)
+
+    refresh_times = []
+    for _ in range(3):
+        with connection.transaction(force_rollback=True):
+            started = time.perf_counter()
+            connection.execute("REFRESH MATERIALIZED VIEW analytics.mv_location_hotspots")
+            refresh_times.append(time.perf_counter() - started)
+    size = connection.execute(
+        "SELECT pg_total_relation_size('analytics.mv_location_hotspots') / 1024"
+    ).fetchone()[0]
+    lines += ["", "| Cost of the materialized view | Value |", "|---|---|",
+              f"| Refresh time (median of 3) | {statistics.median(refresh_times):.1f} s |",
+              f"| Storage including indexes | {size:,} KB |", ""]
+    return lines
+
+
 def header_text(sql_text: str) -> list[str]:
     lines = []
     for line in sql_text.splitlines():
@@ -243,6 +293,7 @@ def main() -> None:
         for r in write_cost:
             logger.info("write cost | %-30s %8.0f ms", r["variant"], r["median_ms"])
         lines += size_section(connection)
+        lines += views_section(connection)
 
     RESULTS_PATH.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     logger.info("Results written to %s", RESULTS_PATH)

@@ -58,6 +58,18 @@ def row_counts(connection: psycopg.Connection, schema: str) -> dict[str, int]:
     }
 
 
+def refresh_materialized_views(connection: psycopg.Connection) -> None:
+    # A plain (not CONCURRENTLY) refresh is fine here: it runs inside the load transaction,
+    # so readers keep seeing the previous contents until the whole load commits.
+    views = connection.execute(
+        "SELECT schemaname || '.' || matviewname FROM pg_matviews WHERE schemaname = 'analytics' ORDER BY 1"
+    ).fetchall()
+    for (view,) in views:
+        started = time.perf_counter()
+        connection.execute(f"REFRESH MATERIALIZED VIEW {view}")
+        logger.info("Refreshed %s in %.1f s", view, time.perf_counter() - started)
+
+
 def run_pipeline(run_id: int) -> None:
     with get_connection() as connection:
         # Makes the run ID available to SQL (current_setting) for this transaction only.
@@ -84,6 +96,7 @@ def run_pipeline(run_id: int) -> None:
         connection.execute(
             "ANALYZE analytics.fact_crash, analytics.fact_person, analytics.fact_vehicle, analytics.dim_location"
         )
+        refresh_materialized_views(connection)
 
         logger.info("Rejected rows: %s", f"{rejected:,}")
         for schema in ("core", "analytics"):
