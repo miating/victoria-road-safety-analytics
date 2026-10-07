@@ -20,6 +20,7 @@ from src.load.load_staging import load_all
 from src.transform.run_sql import run_sql_files
 from src.utils.db import get_connection
 from src.validation.checks import run_checks
+from src.validation.report import write_report
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
@@ -98,6 +99,7 @@ def main() -> None:
         raise
     finish_run(run_id, "succeeded")
     logger.info("ETL run %s succeeded in %.0f seconds", run_id, time.perf_counter() - started)
+    write_report(run_id)
 
 
 if __name__ == "__main__":

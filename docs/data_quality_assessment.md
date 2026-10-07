@@ -76,7 +76,7 @@ Following the project rule of never silently deleting data:
 
 | ID | Check | Result | Action |
 |---|---|---|---|
-| DQ22 | `VEHICLE_YEAR_MANUF` is a plausible year | 31,211 are `0`, 6,951 blank, 1 in the future | Fix: `0` and future years become NULL |
+| DQ22 | `VEHICLE_YEAR_MANUF` is a plausible year | 31,211 are `0`, 6,951 blank, 1 in the future. Phase 6 found 253 vehicles at exactly `1900` (of mixed types, including heavy vehicles and plant) versus 1 in 1901, so 1900 is also a placeholder | Fix: `0`, `1900` and future years become NULL. Other early years are kept as plausible vintage vehicles |
 | DQ23 | Unknown categories | `AGE_GROUP = Unknown` 15,129; `SEX = U` 16,675; plus "Not known" codes in weather, surface and light condition | Map to an explicit Unknown member, never drop |
 | — | `VEHICLE_POWER` | 100% empty | Not loaded |
 | — | `ROAD_USER_TYPE` | Codes 2 and 7 both mean Drivers; 3 and 8 both mean Passengers | Document: analyse by description, not code |

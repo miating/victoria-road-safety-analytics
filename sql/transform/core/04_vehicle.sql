@@ -1,5 +1,6 @@
 -- One row per vehicle in a valid crash. VEHICLE_POWER is not loaded (100% empty).
--- Year of manufacture 0 or in the future becomes NULL (DQ22).
+-- Year of manufacture 0, 1900 or in the future becomes NULL (DQ22). 1900 is a placeholder:
+-- 253 vehicles of mixed types versus 1 vehicle in 1901. Other early years are kept (vintage vehicles).
 
 INSERT INTO core.vehicle (
     accident_no, vehicle_id, vehicle_type_code, year_manufactured, body_style, make,
@@ -10,7 +11,7 @@ SELECT v.accident_no,
        v.vehicle_id,
        v.vehicle_type,
        CASE WHEN v.vehicle_year_manuf ~ '^[0-9]{4}$'
-             AND v.vehicle_year_manuf::INTEGER BETWEEN 1900 AND extract(year FROM current_date)
+             AND v.vehicle_year_manuf::INTEGER BETWEEN 1901 AND extract(year FROM current_date)
             THEN v.vehicle_year_manuf::SMALLINT END,
        v.vehicle_body_style,
        v.vehicle_make,

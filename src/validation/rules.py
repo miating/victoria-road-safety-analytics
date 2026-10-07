@@ -128,8 +128,8 @@ CHILD_RULES = [
                                             GROUP BY 1, 2 HAVING count(*) > 1)""")
     for table, key in CHILD_TABLE_KEYS.items()
 ] + [
-    Rule("DQ22", "staging", "vehicle", "fix", "VEHICLE_YEAR_MANUF is 0 or in the future; set to NULL",
-         """t.vehicle_year_manuf = '0'
+    Rule("DQ22", "staging", "vehicle", "fix", "VEHICLE_YEAR_MANUF is a placeholder (0 or 1900) or in the future; set to NULL",
+         """t.vehicle_year_manuf IN ('0', '1900')
             OR (t.vehicle_year_manuf ~ '^[0-9]+$'
                 AND t.vehicle_year_manuf::int > extract(year FROM current_date))"""),
 ]
