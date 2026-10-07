@@ -1,4 +1,5 @@
-"""Create the database schemas and tables by running sql/schema/*.sql in name order.
+"""Create the database schemas, tables and indexes by running sql/schema/*.sql and then
+sql/indexes/*.sql in name order.
 
 All files run in one transaction, so a failure leaves the database unchanged.
 The DDL uses IF NOT EXISTS, so running it again is safe. Use --reset during
@@ -15,14 +16,16 @@ from pathlib import Path
 
 from src.utils.db import get_connection
 
-SCHEMA_DIR = Path(__file__).resolve().parents[2] / "sql" / "schema"
+SQL_DIR = Path(__file__).resolve().parents[2] / "sql"
+# Tables first, then the secondary indexes that are justified in docs/query_optimisation.md.
+SQL_DIRS = [SQL_DIR / "schema", SQL_DIR / "indexes"]
 SCHEMAS = ["analytics", "core", "staging", "audit"]
 
 logger = logging.getLogger(__name__)
 
 
 def apply_schema(reset: bool = False) -> None:
-    sql_files = sorted(SCHEMA_DIR.glob("*.sql"))
+    sql_files = [path for directory in SQL_DIRS for path in sorted(directory.glob("*.sql"))]
     with get_connection() as connection:
         if reset:
             for schema in SCHEMAS:

@@ -79,7 +79,11 @@ def run_pipeline(run_id: int) -> None:
             logger.info("Step 5/5: building analytics tables")
             run_sql_files(connection, ANALYTICS_SQL_DIR)
         connection.execute("ANALYZE core.crash, core.person, core.vehicle, core.node")
-        connection.execute("ANALYZE analytics.fact_crash, analytics.fact_person, analytics.fact_vehicle")
+        # Fresh statistics so the planner uses the indexes in sql/indexes; the expression
+        # index on dim_location needs ANALYZE to have statistics for lower(road_name).
+        connection.execute(
+            "ANALYZE analytics.fact_crash, analytics.fact_person, analytics.fact_vehicle, analytics.dim_location"
+        )
 
         logger.info("Rejected rows: %s", f"{rejected:,}")
         for schema in ("core", "analytics"):
